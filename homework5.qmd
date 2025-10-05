@@ -4,23 +4,28 @@ format: html
 editor: visual
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
 ```{r}
-1 + 1
+library(tidyverse)
 ```
 
-You can add options to executable code like this
+
+#Read in UCI Data
 
 ```{r}
-#| echo: false
-2 * 2
+#use r code provided in download... already suitable to read files from project folder
+d1=read.table("student-mat.csv",sep=";",header=TRUE)
+d2=read.table("student-por.csv",sep=";",header=TRUE)
+
+d3=merge(d1,d2,by=c("school","sex","age","address","famsize","Pstatus","Medu","Fedu","Mjob","Fjob","reason","nursery","internet"))
+print(nrow(d3)) # 382 students
+
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+```{r}
+mat <- read_csv2("student-mat.csv", col_names = TRUE)
+por <- read_csv2("student-por.csv", col_names = TRUE)
+
+
+
+```
+
