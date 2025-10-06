@@ -8,7 +8,6 @@ editor: visual
 library(tidyverse)
 ```
 
-
 #Read in UCI Data
 
 ```{r}
@@ -17,15 +16,22 @@ d1=read.table("student-mat.csv",sep=";",header=TRUE)
 d2=read.table("student-por.csv",sep=";",header=TRUE)
 
 d3=merge(d1,d2,by=c("school","sex","age","address","famsize","Pstatus","Medu","Fedu","Mjob","Fjob","reason","nursery","internet"))
-print(nrow(d3)) # 382 students
+#print(nrow(d3)) # 382 students
 
 ```
 
+#Tidyverse Read in Data
 ```{r}
-mat <- read_csv2("student-mat.csv", col_names = TRUE)
-por <- read_csv2("student-por.csv", col_names = TRUE)
+#same work done using tidyverse functions
+mat <- read_delim("student-mat.csv", delim = ";", col_names = TRUE)
+por <- read_delim("student-por.csv", delim = ";", col_names = TRUE)
 
+#result is many to many join - these fields are not specific enough
+fulldata <- inner_join(mat, por, by = join_by("school","sex","age","address","famsize","Pstatus","Medu","Fedu","Mjob","Fjob","reason","nursery","internet"))
 
+#join by every field except response variables
+fulldata_final <- inner_join(mat, por, by = names(select(mat,everything(), -c("G1","G2","G3","paid","absences"))))
 
 ```
+
 
