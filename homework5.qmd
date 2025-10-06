@@ -8,7 +8,7 @@ editor: visual
 library(tidyverse)
 ```
 
-#Read in UCI Data
+# Read in UCI Data
 
 ```{r}
 #use r code provided in download... already suitable to read files from project folder
@@ -20,36 +20,22 @@ d3=merge(d1,d2,by=c("school","sex","age","address","famsize","Pstatus","Medu","F
 
 ```
 
-#Tidyverse Read in Data
+# Tidyverse Read in Data
 ```{r}
 #same work done using tidyverse functions
 mat <- as_tibble(read_delim("student-mat.csv", delim = ";", col_names = TRUE))
 por <- as_tibble(read_delim("student-por.csv", delim = ";", col_names = TRUE))
 
 #result is many:many join - these fields are not specific enough
-#fulldata <- inner_join(mat, por, by = join_by("school","sex","age","address","famsize","Pstatus","Medu","Fedu","Mjob","Fjob","reason","nursery","internet"))
+InitialJoin <- inner_join(mat, por, by = join_by("school","sex","age","address","famsize","Pstatus","Medu","Fedu","Mjob","Fjob","reason","nursery","internet"))
 
 
 
 ```
 
-#Assign factors for categorical variables
-#Loop to add factors to all tibbles
+# Assign factors for categorical variables
+# Loop to add factors to all tibbles
 ```{r}
-
-health_factor <- list(levels = c(seq(1:5)),
-                     labels = c("very bad","bad","neutral","good","very good"))
-
-walc_factor <- list(levels = c(seq(1:5)),
-                    labels = c("very low", "low", "0-avg","high","very high"))
-
-dalc_factor <- list(levels = c(seq(1:5)),
-                    labels = c("very low", "low", "0-avg","high","very high"))
-
-studytime_factor <- list(levels = c(seq(1:4)),
-                    labels = c("<2 hours", "2-5 hours", "5-10 hours",">10 hours"))
-
-
 
 mat <-  mat |>
   mutate(
@@ -76,8 +62,17 @@ por <-  por |>
   )
 
 
+
+```
+
+# Final Join
+```{r}
 #join by every field except response variables
 #no many:many join message
-fulldata_final <- as_tibble(inner_join(mat, por, by = names(select(mat,everything(), -c("G1","G2","G3","paid","absences","health_f","Walc_f","Dalc_f","studytime_f")))))
+combined <- as_tibble(
+  inner_join(mat, por, 
+             by = names(select(mat,everything(), -c("G1","G2","G3","paid","absences","health_f","Walc_f","Dalc_f","studytime_f")))
+             )
+  )
 ```
 
