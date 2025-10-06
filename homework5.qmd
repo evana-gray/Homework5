@@ -81,7 +81,6 @@ rm(d1,d2,d3,InitialJoin)
 ```
 
 # Initial EDA
-
 ```{r}
 #view tibble - observe sample of values
 combined
@@ -102,4 +101,19 @@ na_counts <- combined |>
 na_counts
 
 ```
+
+# Contingency Tables
+```{r}
+
+#one way contingency table - record count by Mother's Job
+table(combined$address)
+
+#two way contingency table - record counts by Mother's job and address (Rural/Urban)
+table(combined$Mjob, combined$address)
+
+#three way contingency table - record counts by Mother's job, address, and a 3rd dimension - presence of family educational support (yes/no)
+table(combined$Mjob, combined$address, combined$famsup)
+
+```
+
 
