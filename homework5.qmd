@@ -139,3 +139,14 @@ twoway_2 <- table(combined$sex, combined$studytime_f.x, combined$address)
 twoway_2[,,2] #selecting for urban [sex row, study time column,rural/urban]
 ```
 
+## dplyr contingency table
+
+```{r}
+#observe count of health status across levels of reported weekly alcohol use
+#reorient data using pivot_wider()
+combined |>
+  group_by(health_f.x, Walc_f.x) |>
+  summarize(count = n()) |>
+  pivot_wider(names_from = health_f.x, values_from = count)
+```
+
