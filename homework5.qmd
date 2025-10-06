@@ -6,6 +6,7 @@ editor: visual
 
 ```{r}
 library(tidyverse)
+library(psych)
 ```
 
 # Read in UCI Data
@@ -74,5 +75,31 @@ combined <- as_tibble(
              by = names(select(mat,everything(), -c("G1","G2","G3","paid","absences","health_f","Walc_f","Dalc_f","studytime_f")))
              )
   )
+
+#clear initial imports out of environment
+rm(d1,d2,d3,InitialJoin)
+```
+
+# Initial EDA
+
+```{r}
+#view tibble - observe sample of values
+combined
+
+#use describe() to get descriptive statistics on all variables
+psych::describe(combined)
+
+#determine missing rate using function in lecture
+##no missing values identified throughout entire dataset
+colSums(is.na(combined))
+
+sum_na <- function(column){
+  sum(is.na(column))
+}
+
+na_counts <- combined |>
+  summarize(across(everything(), sum_na))
+na_counts
+
 ```
 
