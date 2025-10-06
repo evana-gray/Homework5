@@ -103,17 +103,39 @@ na_counts
 ```
 
 # Contingency Tables
+## Simple one way contingency
 ```{r}
-
 #one way contingency table - record count by Mother's Job
 table(combined$address)
 
+```
+
+## Two way contingency
+```{r}
 #two way contingency table - record counts by Mother's job and address (Rural/Urban)
 table(combined$Mjob, combined$address)
 
+```
+
+## Three way contingency
+```{r}
 #three way contingency table - record counts by Mother's job, address, and a 3rd dimension - presence of family educational support (yes/no)
 table(combined$Mjob, combined$address, combined$famsup)
 
 ```
 
+## Conditional two way table
+```{r}
+
+#conditional two way table - observe study time by sex where address is rural 
+#create data subset before table()
+ruraldata <- combined |> 
+  filter(address == "R") 
+table(ruraldata$sex, ruraldata$studytime_f.x)
+
+
+#conditional two way table - observe study time by sex where address is urban
+twoway_2 <- table(combined$sex, combined$studytime_f.x, combined$address)
+twoway_2[,,2] #selecting for urban [sex row, study time column,rural/urban]
+```
 
