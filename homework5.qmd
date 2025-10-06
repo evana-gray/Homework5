@@ -26,10 +26,11 @@ d3=merge(d1,d2,by=c("school","sex","age","address","famsize","Pstatus","Medu","F
 mat <- read_delim("student-mat.csv", delim = ";", col_names = TRUE)
 por <- read_delim("student-por.csv", delim = ";", col_names = TRUE)
 
-#result is many to many join - these fields are not specific enough
+#result is many:many join - these fields are not specific enough
 fulldata <- inner_join(mat, por, by = join_by("school","sex","age","address","famsize","Pstatus","Medu","Fedu","Mjob","Fjob","reason","nursery","internet"))
 
 #join by every field except response variables
+#no many:many join message
 fulldata_final <- inner_join(mat, por, by = names(select(mat,everything(), -c("G1","G2","G3","paid","absences"))))
 
 ```
