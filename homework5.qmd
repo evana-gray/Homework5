@@ -159,14 +159,14 @@ combined |>
 #stacked bar plot
 ggplot(combined, aes(x = health_f.x, fill = address)) +
   geom_bar() +
-  scale_fill_brewer(palette = "Dark2") +
-  labs(title = "Stacked Bar Chart",x = "Health", y = "Observations")
+  labs(title = "Stacked Bar Chart",x = "Health", y = "Observations") +
+  theme_light()
 
 #side by side bar plot
 ggplot(combined, aes(x = health_f.x, fill = address)) +
   geom_bar(position = "dodge") +
-  scale_fill_brewer(palette = "Dark2") +
-  labs(title = "Side by Side Bar Chart", x = "Health", y = "Observations")
+  labs(title = "Side by Side Bar Chart", x = "Health", y = "Observations") + 
+  theme_light()
 
 ```
 
@@ -243,7 +243,7 @@ combined |>
 
 # Hist., Density, Boxplot
 ```{r}
-# using method of naming ggplot object and calling in later steps
+# using technique of naming ggplot object and calling in later steps
 #g <- ggplot(combined, aes(x = absences.x, fill = sex))
 #g + geom_histogram( bins = 10, position = "dodge") + 
    # geom_density(alpha = .4) + 
@@ -252,24 +252,34 @@ combined |>
 ```
 
 # Scatterplot Analyses
-
+## Scatterplot 1 Math G3 Scores by Math Absences by school
 ```{r}
-#Scatterplot 1 Math G3 Scores by Math Absences by school
 gs <- ggplot(combined, aes(x = absences.x, y = G3.x, color = school))
 gs + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math Absences", y = "Math G3 Score")
 ```
 
-
+## Scatterplot 2 Math G3 Scores by Math G1 Scores by Sex
 ```{r}
-#Scatterplot 2 Math G3 Scores by Math G1 Scores by Sex
 gs2 <- ggplot(combined, aes(x = G1.x, y = G3.x, color = sex))
 gs2 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math G1 Score", y = "Math G3 Score")
 ```
 
+## Scatterplot 2 Math G3 Scores by Math G1 Scores by Sex
+```{r}
+gs2 <- ggplot(combined, aes(x = G1.x, y = G3.x, color = sex))
+gs2 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math G1 Score", y = "Math G3 Score")
+```
 
+## Scatterplot with facet
+```{r}
+gs2 <- ggplot(combined, aes(x = G1.x, y = G3.x))
+gs2 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math G1 Score", y = "Math G3 Score") + facet_wrap(~sex) + theme_light()
+```
 
-
-
-
-
+## Scatterplot with multi categorical facet
+```{r}
+gs3 <- ggplot(combined, aes(x = G1.x, y = G3.x))
+gs3 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math G1 Score", y = "Math G3 Score") + 
+      facet_grid(rows = vars(school), cols = vars(sex))
+```
 
