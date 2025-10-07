@@ -172,7 +172,15 @@ ggplot(combined, aes(x = health_f.x, fill = address)) +
 # Numeric Variables
 
 ```{r}
+#Measures of Center and Spread
+fxlist <- list("mean" = mean, "median" = median, "var" = var, "sd" = sd, "IQR" = IQR)
 
+results <- list(
+combined |> summarize(across(age,.fns = fxlist,.names = "{.col}_{.fn}")),
+combined |> summarize(across(absences.x,.fns = fxlist,.names = "{.col}_{.fn}")),
+combined |> summarize(across(G3.x,.fns = fxlist,.names = "{.col}_{.fn}"))
+)
 
+results
 ```
 
