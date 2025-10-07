@@ -7,6 +7,7 @@ editor: visual
 ```{r}
 library(tidyverse)
 library(psych)
+library(RColorBrewer)
 ```
 
 # Read in UCI Data
@@ -149,4 +150,27 @@ combined |>
   summarize(count = n()) |>
   pivot_wider(names_from = health_f.x, values_from = count)
 ```
+
+# Initial Bar Plots
+## Compare stacked with side by side
+```{r}
+
+#stacked bar plot
+ggplot(combined |> 
+  drop_na(health_f.x, address) |>
+  group_by(health_f.x, address) |>
+  summarize(count = n()), aes(x = health_f.x, y = count, fill = address)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Stacked Bar Chart",x = "Health", y = "Observations") +
+  scale_fill_brewer(palette = "Dark2")
+
+#side by side bar plot
+ggplot(combined |> 
+  drop_na(health_f.x, address), 
+  aes(x = health_f.x, fill = address)) + 
+  geom_bar(position = "dodge") + 
+  labs(title = "Side by Side Bar Chart", x = "Health", y = "Observations")+
+  scale_fill_brewer(palette = "Dark2")
+```
+
 
