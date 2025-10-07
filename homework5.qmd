@@ -175,12 +175,30 @@ ggplot(combined, aes(x = health_f.x, fill = address)) +
 #Measures of Center and Spread
 fxlist <- list("mean" = mean, "median" = median, "var" = var, "sd" = sd, "IQR" = IQR)
 
-results <- list(
+MeasureAndSpread1 <- list(
 combined |> summarize(across(age,.fns = fxlist,.names = "{.col}_{.fn}")),
 combined |> summarize(across(absences.x,.fns = fxlist,.names = "{.col}_{.fn}")),
 combined |> summarize(across(G3.x,.fns = fxlist,.names = "{.col}_{.fn}"))
 )
 
-results
+MeasureAndSpread1
+
+MeasureAndSpread2 <- list(
+combined |> group_by(school)|> summarize(across(age,.fns = fxlist,.names = "{.col}_{.fn}")),
+combined |> group_by(school)|> summarize(across(absences.x,.fns = fxlist,.names = "{.col}_{.fn}")),
+combined |> group_by(school)|> summarize(across(G3.x,.fns = fxlist,.names = "{.col}_{.fn}"))
+)
+
+MeasureAndSpread2
+
+#subset for GP school
+combinedgp <- filter(combined,school == "GP")
+MeasureAndSpread3 <- list(
+combinedgp |> summarize(across(age,.fns = fxlist,.names = "{.col}_{.fn}")),
+combinedgp |> summarize(across(absences.x,.fns = fxlist,.names = "{.col}_{.fn}")),
+combinedgp |> summarize(across(G3.x,.fns = fxlist,.names = "{.col}_{.fn}"))
+)
+
+MeasureAndSpread3
 ```
 
