@@ -8,6 +8,7 @@ editor: visual
 library(tidyverse)
 library(psych)
 library(RColorBrewer)
+library(GGally)
 ```
 
 # Read in UCI Data
@@ -181,6 +182,13 @@ combined |> summarize(across(absences.x,.fns = fxlist,.names = "{.col}_{.fn}")),
 combined |> summarize(across(G3.x,.fns = fxlist,.names = "{.col}_{.fn}"))
 )
 
+MeasureAndSpread2
+
+```
+
+
+```{r}
+#Overall age absences and G3 across school
 MeasureAndSpread1
 
 MeasureAndSpread2 <- list(
@@ -188,9 +196,10 @@ combined |> group_by(school)|> summarize(across(age,.fns = fxlist,.names = "{.co
 combined |> group_by(school)|> summarize(across(absences.x,.fns = fxlist,.names = "{.col}_{.fn}")),
 combined |> group_by(school)|> summarize(across(G3.x,.fns = fxlist,.names = "{.col}_{.fn}"))
 )
+```
 
-MeasureAndSpread2
 
+```{r}
 #subset for GP school
 combinedgp <- filter(combined,school == "GP")
 MeasureAndSpread3 <- list(
@@ -201,4 +210,39 @@ combinedgp |> summarize(across(G3.x,.fns = fxlist,.names = "{.col}_{.fn}"))
 
 MeasureAndSpread3
 ```
+
+```{r}
+#Measures across two variables: reason for choosing school and the school that was chosen. 
+MeasureAndSpread4 <- list(
+combined |> group_by(reason, school)|> summarize(across(age,.fns = fxlist,.names = "{.col}_{.fn}")),
+combined |> group_by(reason, school)|> summarize(across(absences.x,.fns = fxlist,.names = "{.col}_{.fn}")),
+combined |> group_by(reason, school)|> summarize(across(G3.x,.fns = fxlist,.names = "{.col}_{.fn}"))
+)
+
+MeasureAndSpread4
+```
+
+```{r}
+library(GGally)
+ggpairs(combined |> 
+          drop_na(age, absences.x, G3.x) |>
+          columns = c(age, absences.x, G3.x)
+        )
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
