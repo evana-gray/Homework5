@@ -156,21 +156,23 @@ combined |>
 ```{r}
 
 #stacked bar plot
-ggplot(combined |> 
-  drop_na(health_f.x, address) |>
-  group_by(health_f.x, address) |>
-  summarize(count = n()), aes(x = health_f.x, y = count, fill = address)) +
-  geom_bar(stat = "identity") +
-  labs(title = "Stacked Bar Chart",x = "Health", y = "Observations") +
-  scale_fill_brewer(palette = "Dark2")
+ggplot(combined, aes(x = health_f.x, fill = address)) +
+  geom_bar() +
+  scale_fill_brewer(palette = "Dark2") +
+  labs(title = "Stacked Bar Chart",x = "Health", y = "Observations")
 
 #side by side bar plot
-ggplot(combined |> 
-  drop_na(health_f.x, address), 
-  aes(x = health_f.x, fill = address)) + 
-  geom_bar(position = "dodge") + 
-  labs(title = "Side by Side Bar Chart", x = "Health", y = "Observations")+
-  scale_fill_brewer(palette = "Dark2")
+ggplot(combined, aes(x = health_f.x, fill = address)) +
+  geom_bar(position = "dodge") +
+  scale_fill_brewer(palette = "Dark2") +
+  labs(title = "Side by Side Bar Chart", x = "Health", y = "Observations")
+
 ```
 
+# Numeric Variables
+
+```{r}
+
+
+```
 
