@@ -222,22 +222,49 @@ combined |> group_by(reason, school)|> summarize(across(G3.x,.fns = fxlist,.name
 MeasureAndSpread4
 ```
 
+# Correlation Matrix
+## correlation matrix of three target variables
 ```{r}
-library(GGally)
-ggpairs(combined |> 
-          drop_na(age, absences.x, G3.x) |>
-          columns = c(age, absences.x, G3.x)
-        )
+
+combined |>
+  select(age, absences.x, G3.x) |>
+  cor()
 
 ```
 
+## correlation matrix for all numeric variables in combined dataset
+```{r}
+
+combined |>
+  select(where(is.numeric)) |>
+  cor()
+
+```
+
+# Hist., Density, Boxplot
+```{r}
+# using method of naming ggplot object and calling in later steps
+#g <- ggplot(combined, aes(x = absences.x, fill = sex))
+#g + geom_histogram( bins = 10, position = "dodge") + 
+   # geom_density(alpha = .4) + 
+#    labs(x = "Math Absences")
+
+```
+
+# Scatterplot Analyses
+
+```{r}
+#Scatterplot 1 Math G3 Scores by Math Absences by school
+gs <- ggplot(combined, aes(x = absences.x, y = G3.x, color = school))
+gs + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math Absences", y = "Math G3 Score")
+```
 
 
-
-
-
-
-
+```{r}
+#Scatterplot 2 Math G3 Scores by Math G1 Scores by Sex
+gs2 <- ggplot(combined, aes(x = G1.x, y = G3.x, color = sex))
+gs2 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math G1 Score", y = "Math G3 Score")
+```
 
 
 
