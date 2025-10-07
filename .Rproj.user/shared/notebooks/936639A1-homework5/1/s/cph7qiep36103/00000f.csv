@@ -1,0 +1,33 @@
+"0","#same work done using tidyverse functions"
+"0","mat <- as_tibble(read_delim(""student-mat.csv"", delim = "";"", col_names = TRUE))"
+"2","[1mRows: [22m[34m395[39m [1mColumns: [22m[34m33[39m
+"
+"2","[36m──[39m [1mColumn specification[22m [36m───────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "";""
+[31mchr[39m (17): school, sex, address, famsize, Pstatus, Mjob, Fjob, reason, guardian, schoolsup, famsup, paid, activities, nu...
+[32mdbl[39m (16): age, Medu, Fedu, traveltime, studytime, failures, famrel, freetime, goout, Dalc, Walc, health, absences, G1, ...
+"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+"
+"0","por <- as_tibble(read_delim(""student-por.csv"", delim = "";"", col_names = TRUE))"
+"2","[1mRows: [22m[34m649[39m [1mColumns: [22m[34m33[39m
+"
+"2","[36m──[39m [1mColumn specification[22m [36m───────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "";""
+[31mchr[39m (17): school, sex, address, famsize, Pstatus, Mjob, Fjob, reason, guardian, schoolsup, famsup, paid, activities, nu...
+[32mdbl[39m (16): age, Medu, Fedu, traveltime, studytime, failures, famrel, freetime, goout, Dalc, Walc, health, absences, G1, ...
+"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+"
+"0","#result is many:many join - these fields are not specific enough"
+"0","InitialJoin <- inner_join(mat, por, by = join_by(""school"",""sex"",""age"",""address"",""famsize"",""Pstatus"",""Medu"",""Fedu"",""Mjob"",""Fjob"",""reason"",""nursery"",""internet""))"
+"2","G2;H2;Warningh in inner_join(mat, por, by = join_by(""school"", ""sex"", ""age"", ""address"",  :
+  [38;5;255mDetected an unexpected many-to-many relationship between `x` and `y`.
+[36mℹ[38;5;255m Row 79 of `x` matches multiple rows in `y`.
+[36mℹ[38;5;255m Row 79 of `y` matches multiple rows in `x`.
+[36mℹ[38;5;255m If a many-to-many relationship is expected, set `relationship = ""many-to-many""` to silence this warning.[39mg
+"

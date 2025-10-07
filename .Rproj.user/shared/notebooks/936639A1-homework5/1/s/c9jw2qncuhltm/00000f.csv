@@ -1,0 +1,16 @@
+"0","library(GGally)"
+"0","ggpairs(combined |> "
+"0","          drop_na(age, absences.x, G3.x) |>"
+"0","          columns = c(age, absences.x, G3.x)"
+"2","G1;H1;Errorh: unexpected '=' in:
+""          drop_na(age, absences.x, G3.x) |>
+          columns =""
+g"
+"2","G1;H1;Error during wrapuph: not that many frames on the stack
+Error: no more error handlers available (recursive errors?); invoking 'abort' restart
+g"
+"0","        )"
+"2","G1;H1;Errorh: unexpected ')' in ""        )""
+Error during wrapup: not that many frames on the stack
+Error: no more error handlers available (recursive errors?); invoking 'abort' restart
+g"

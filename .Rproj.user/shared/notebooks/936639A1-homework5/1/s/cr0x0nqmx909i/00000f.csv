@@ -1,0 +1,7 @@
+"0","#use r code provided in download... already suitable to read files from project folder"
+"0","d1=read.table(""student-mat.csv"",sep="";"",header=TRUE)"
+"0","d2=read.table(""student-por.csv"",sep="";"",header=TRUE)"
+"0",""
+"0","d3=merge(d1,d2,by=c(""school"",""sex"",""age"",""address"",""famsize"",""Pstatus"",""Medu"",""Fedu"",""Mjob"",""Fjob"",""reason"",""nursery"",""internet""))"
+"0","#print(nrow(d3)) # 382 students"
+"0",""

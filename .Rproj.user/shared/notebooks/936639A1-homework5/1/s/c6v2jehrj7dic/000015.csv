@@ -1,0 +1,12 @@
+"1","
+[[3]]
+"
+"1","
+"
+"0","MeasureAndSpread2 <- list("
+"0","combined |> group_by(school)|> summarize(across(age,.fns = fxlist,.names = ""{.col}_{.fn}"")),"
+"0","combined |> group_by(school)|> summarize(across(absences.x,.fns = fxlist,.names = ""{.col}_{.fn}"")),"
+"0","combined |> group_by(school)|> summarize(across(G3.x,.fns = fxlist,.names = ""{.col}_{.fn}""))"
+"0",")"
+"0",""
+"0","MeasureAndSpread2"

@@ -1,0 +1,6 @@
+"0","# using technique of naming ggplot object and calling in later steps"
+"0","#g <- ggplot(combined, aes(x = absences.x, fill = sex))"
+"0","#g + geom_histogram( bins = 10, position = ""dodge"") + "
+"0","   # geom_density(alpha = .4) + "
+"0","#    labs(x = ""Math Absences"")"
+"0",""

@@ -1,0 +1,6 @@
+"0",""
+"0","#stacked bar plot"
+"0","ggplot(combined, aes(x = health_f.x, fill = address)) +"
+"0","  geom_bar() +"
+"0","  labs(title = ""Stacked Bar Chart"",x = ""Health"", y = ""Observations"") +"
+"0","  theme_light()"

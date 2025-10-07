@@ -1,0 +1,10 @@
+"0","#two way contingency table - record counts by Mother's job and address (Rural/Urban)"
+"0","table(combined$Mjob, combined$address)"
+"1","          
+            R  U
+  at_home  18 26
+  health    3 27
+  other    23 93
+  services 12 63
+  teacher  11 44
+"

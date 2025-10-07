@@ -1,0 +1,287 @@
+---
+title: "homework5"
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(psych)
+library(RColorBrewer)
+library(GGally)
+```
+
+# Read in UCI Data
+
+```{r}
+#use r code provided in download... already suitable to read files from project folder
+d1=read.table("student-mat.csv",sep=";",header=TRUE)
+d2=read.table("student-por.csv",sep=";",header=TRUE)
+
+d3=merge(d1,d2,by=c("school","sex","age","address","famsize","Pstatus","Medu","Fedu","Mjob","Fjob","reason","nursery","internet"))
+#print(nrow(d3)) # 382 students
+
+```
+
+# Tidyverse Read in Data
+```{r}
+#same work done using tidyverse functions
+mat <- as_tibble(read_delim("student-mat.csv", delim = ";", col_names = TRUE))
+por <- as_tibble(read_delim("student-por.csv", delim = ";", col_names = TRUE))
+
+#result is many:many join - these fields are not specific enough
+InitialJoin <- inner_join(mat, por, by = join_by("school","sex","age","address","famsize","Pstatus","Medu","Fedu","Mjob","Fjob","reason","nursery","internet"))
+
+
+
+```
+
+# Assign factors for categorical variables
+# Loop to add factors to all tibbles
+```{r}
+
+mat <-  mat |>
+  mutate(
+    health_f = factor(health,levels = c(seq(1:5)),
+                     labels = c("very bad","bad","neutral","good","very good")),
+    Walc_f = factor(Walc,levels = c(seq(1:5)),
+                    labels = c("very low", "low", "0-avg","high","very high")),
+    Dalc_f = factor(Dalc,levels = c(seq(1:5)),
+                    labels = c("very low", "low", "0-avg","high","very high")),
+    studytime_f = factor(studytime,levels = c(seq(1:4)),
+                    labels = c("<2 hours", "2-5 hours", "5-10 hours",">10 hours"))
+  )
+
+por <-  por |>
+  mutate(
+    health_f = factor(health,levels = c(seq(1:5)),
+                     labels = c("very bad","bad","neutral","good","very good")),
+    Walc_f = factor(Walc,levels = c(seq(1:5)),
+                    labels = c("very low", "low", "0-avg","high","very high")),
+    Dalc_f = factor(Dalc,levels = c(seq(1:5)),
+                    labels = c("very low", "low", "0-avg","high","very high")),
+    studytime_f = factor(studytime,levels = c(seq(1:4)),
+                    labels = c("<2 hours", "2-5 hours", "5-10 hours",">10 hours"))
+  )
+
+
+
+```
+
+# Final Join
+```{r}
+#join by every field except response variables
+#no many:many join message
+combined <- as_tibble(
+  inner_join(mat, por, 
+             by = names(select(mat,everything(), -c("G1","G2","G3","paid","absences","health_f","Walc_f","Dalc_f","studytime_f")))
+             )
+  )
+
+#clear initial imports out of environment
+rm(d1,d2,d3,InitialJoin)
+```
+
+# Initial EDA
+```{r}
+#view tibble - observe sample of values
+combined
+
+#use describe() to get descriptive statistics on all variables
+psych::describe(combined)
+
+#determine missing rate using function in lecture
+##no missing values identified throughout entire dataset
+colSums(is.na(combined))
+
+sum_na <- function(column){
+  sum(is.na(column))
+}
+
+na_counts <- combined |>
+  summarize(across(everything(), sum_na))
+na_counts
+
+```
+
+# Contingency Tables
+## Simple one way contingency
+```{r}
+#one way contingency table - record count by Mother's Job
+table(combined$address)
+
+```
+
+## Two way contingency
+```{r}
+#two way contingency table - record counts by Mother's job and address (Rural/Urban)
+table(combined$Mjob, combined$address)
+
+```
+
+## Three way contingency
+```{r}
+#three way contingency table - record counts by Mother's job, address, and a 3rd dimension - presence of family educational support (yes/no)
+table(combined$Mjob, combined$address, combined$famsup)
+
+```
+
+## Conditional two way table
+```{r}
+
+#conditional two way table - observe study time by sex where address is rural 
+#create data subset before table()
+ruraldata <- combined |> 
+  filter(address == "R") 
+table(ruraldata$sex, ruraldata$studytime_f.x)
+
+
+#conditional two way table - observe study time by sex where address is urban
+twoway_2 <- table(combined$sex, combined$studytime_f.x, combined$address)
+twoway_2[,,2] #selecting for urban [sex row, study time column,rural/urban]
+```
+
+## dplyr contingency table
+
+```{r}
+#observe count of health status across levels of reported weekly alcohol use
+#reorient data using pivot_wider()
+combined |>
+  group_by(health_f.x, Walc_f.x) |>
+  summarize(count = n()) |>
+  pivot_wider(names_from = health_f.x, values_from = count)
+```
+
+# Initial Bar Plots
+## Compare stacked with side by side
+```{r}
+
+#stacked bar plot
+ggplot(combined, aes(x = health_f.x, fill = address)) +
+  geom_bar() +
+  labs(title = "Stacked Bar Chart",x = "Health", y = "Observations") +
+  theme_light()
+
+#side by side bar plot
+ggplot(combined, aes(x = health_f.x, fill = address)) +
+  geom_bar(position = "dodge") +
+  labs(title = "Side by Side Bar Chart", x = "Health", y = "Observations") + 
+  theme_light()
+
+```
+
+# Numeric Variables
+
+```{r}
+#Measures of Center and Spread
+fxlist <- list("mean" = mean, "median" = median, "var" = var, "sd" = sd, "IQR" = IQR)
+
+MeasureAndSpread1 <- list(
+combined |> summarize(across(age,.fns = fxlist,.names = "{.col}_{.fn}")),
+combined |> summarize(across(absences.x,.fns = fxlist,.names = "{.col}_{.fn}")),
+combined |> summarize(across(G3.x,.fns = fxlist,.names = "{.col}_{.fn}"))
+)
+
+MeasureAndSpread1
+
+```
+
+
+```{r}
+#Overall age absences and G3 across school
+
+
+MeasureAndSpread2 <- list(
+combined |> group_by(school)|> summarize(across(age,.fns = fxlist,.names = "{.col}_{.fn}")),
+combined |> group_by(school)|> summarize(across(absences.x,.fns = fxlist,.names = "{.col}_{.fn}")),
+combined |> group_by(school)|> summarize(across(G3.x,.fns = fxlist,.names = "{.col}_{.fn}"))
+)
+
+MeasureAndSpread2
+```
+
+
+```{r}
+#subset for GP school
+combinedgp <- filter(combined,school == "GP")
+MeasureAndSpread3 <- list(
+combinedgp |> summarize(across(age,.fns = fxlist,.names = "{.col}_{.fn}")),
+combinedgp |> summarize(across(absences.x,.fns = fxlist,.names = "{.col}_{.fn}")),
+combinedgp |> summarize(across(G3.x,.fns = fxlist,.names = "{.col}_{.fn}"))
+)
+
+MeasureAndSpread3
+```
+
+```{r}
+#Measures across two variables: reason for choosing school and the school that was chosen. 
+MeasureAndSpread4 <- list(
+combined |> group_by(reason, school)|> summarize(across(age,.fns = fxlist,.names = "{.col}_{.fn}")),
+combined |> group_by(reason, school)|> summarize(across(absences.x,.fns = fxlist,.names = "{.col}_{.fn}")),
+combined |> group_by(reason, school)|> summarize(across(G3.x,.fns = fxlist,.names = "{.col}_{.fn}"))
+)
+
+MeasureAndSpread4
+```
+
+# Correlation Matrix
+## correlation matrix of three target variables
+```{r}
+
+combined |>
+  select(age, absences.x, G3.x) |>
+  cor()
+
+```
+
+## correlation matrix for all numeric variables in combined dataset
+```{r}
+
+combined |>
+  select(where(is.numeric)) |>
+  cor()
+
+```
+
+# Hist., Density, Boxplot
+```{r}
+# using technique of naming ggplot object and calling in later steps
+#g <- ggplot(combined, aes(x = absences.x, fill = sex))
+#g + geom_histogram( bins = 10, position = "dodge") + 
+   # geom_density(alpha = .4) + 
+#    labs(x = "Math Absences")
+
+```
+
+# Scatterplot Analyses
+## Scatterplot 1 Math G3 Scores by Math Absences by school
+```{r}
+gs <- ggplot(combined, aes(x = absences.x, y = G3.x, color = school))
+gs + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math Absences", y = "Math G3 Score")
+```
+
+## Scatterplot 2 Math G3 Scores by Math G1 Scores by Sex
+```{r}
+gs2 <- ggplot(combined, aes(x = G1.x, y = G3.x, color = sex))
+gs2 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math G1 Score", y = "Math G3 Score")
+```
+
+## Scatterplot 2 Math G3 Scores by Math G1 Scores by Sex
+```{r}
+gs2 <- ggplot(combined, aes(x = G1.x, y = G3.x, color = sex))
+gs2 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math G1 Score", y = "Math G3 Score")
+```
+
+## Scatterplot with facet
+```{r}
+gs2 <- ggplot(combined, aes(x = G1.x, y = G3.x))
+gs2 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math G1 Score", y = "Math G3 Score") + facet_wrap(~sex) + theme_light()
+```
+
+## Scatterplot with multi categorical facet
+```{r}
+gs3 <- ggplot(combined, aes(x = G1.x, y = G3.x))
+gs3 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math G1 Score", y = "Math G3 Score") + 
+      facet_grid(rows = vars(school), cols = vars(sex))
+```
+

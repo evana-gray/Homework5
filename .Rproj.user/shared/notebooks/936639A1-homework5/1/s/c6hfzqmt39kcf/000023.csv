@@ -1,0 +1,3 @@
+"0",""
+"0","#use describe() to get descriptive statistics on all variables"
+"0","psych::describe(combined)"

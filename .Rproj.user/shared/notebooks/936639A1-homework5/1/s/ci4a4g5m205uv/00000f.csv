@@ -1,0 +1,2 @@
+"0","gs <- ggplot(combined, aes(x = absences.x, y = G3.x, color = school))"
+"0","gs + geom_point() + geom_jitter(alpha = 0.5) + labs(x = ""Math Absences"", y = ""Math G3 Score"")"
