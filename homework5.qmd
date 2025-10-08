@@ -43,7 +43,7 @@ InitialJoin <- inner_join(mat, por, by = join_by("school","sex","age","address",
 
 ```
 
-# Assign factors for categorical variables
+# Assign factors for categorical variables of interest
 
 ```{r}
 
@@ -56,7 +56,13 @@ mat <-  mat |>
     Dalc_f = factor(Dalc,levels = c(seq(1:5)),
                     labels = c("very low", "low", "0-avg","high","very high")),
     studytime_f = factor(studytime,levels = c(seq(1:4)),
-                    labels = c("<2 hours", "2-5 hours", "5-10 hours",">10 hours"))
+                    labels = c("<2 hours", "2-5 hours", "5-10 hours",">10 hours")),
+    sex_f = factor(sex,levels = c("M","F"),
+                    labels = c("Male","Female")),
+    school_f = factor(school,levels = c("GP","MS"),
+                    labels = c("Gabriel Pereira","Mousinho da Silveira")),
+    address_f = factor(address,levels = c("R","U"),
+                    labels = c("Rural","Urban"))
   )
 
 por <-  por |>
@@ -68,7 +74,13 @@ por <-  por |>
     Dalc_f = factor(Dalc,levels = c(seq(1:5)),
                     labels = c("very low", "low", "0-avg","high","very high")),
     studytime_f = factor(studytime,levels = c(seq(1:4)),
-                    labels = c("<2 hours", "2-5 hours", "5-10 hours",">10 hours"))
+                    labels = c("<2 hours", "2-5 hours", "5-10 hours",">10 hours")),
+    sex_f = factor(sex,levels = c("M","F"),
+                    labels = c("Male","Female")),
+    school_f = factor(school,levels = c("GP","MS"),
+                    labels = c("Gabriel Pereira","Mousinho da Silveira")),
+    address_f = factor(address,levels = c("R","U"),
+                    labels = c("Rural","Urban"))
   )
 
 
@@ -84,7 +96,7 @@ This inner join uses all variables EXCEPT G1, G2, G3, paid and absences. The fou
 #no many:many join message
 combined <- as_tibble(
   inner_join(mat, por, 
-             by = names(select(mat,everything(), -c("G1","G2","G3","paid","absences","health_f","Walc_f","Dalc_f","studytime_f")))
+             by = names(select(mat,everything(), -c("G1","G2","G3","paid","absences", "health_f", "Walc_f", "Dalc_f", "studytime_f","sex_f", "school_f", "address_f")))
              )
   )
 
@@ -129,7 +141,7 @@ This one way contingency table shows the number of students residing in each add
 
 ```{r}
 #one way contingency table
-table(combined$address)
+table(combined$address_f.x)
 
 ```
 
@@ -139,10 +151,10 @@ Below are a two way and a three way contingency table. The two way shows the mot
 
 ```{r}
 #two way contingency table 
-table(combined$Mjob, combined$address)
+table(combined$Mjob, combined$address_f.x)
 
 #three way contingency table
-table(combined$Mjob, combined$address, combined$famsup)
+table(combined$Mjob, combined$address_f.x, combined$famsup)
 
 ```
 
@@ -156,11 +168,11 @@ These two contingency tables demonstrate multiple ways to subset contingency tab
 #create data subset before table()
 ruraldata <- combined |> 
   filter(address == "U") 
-table(ruraldata$sex, ruraldata$studytime_f.x)
+table(ruraldata$sex_f.x, ruraldata$studytime_f.x)
 
 
 #conditional two way table - observe study time by sex where address is urban
-twoway_2 <- table(combined$sex, combined$studytime_f.x, combined$address)
+twoway_2 <- table(combined$sex_f.x, combined$studytime_f.x, combined$address_f.x)
 twoway_2[,,2] #selecting for urban [sex row, study time column,rural/urban]
 ```
 
@@ -186,13 +198,13 @@ Two simple bar plots were created to demonstrate the different ways multiple cat
 ```{r}
 
 #stacked bar plot
-ggplot(combined, aes(x = health_f.x, fill = address)) +
+ggplot(combined, aes(x = health_f.x, fill = address_f.x)) +
   geom_bar() +
   labs(title = "Stacked Bar Chart",x = "Health", y = "Observations") +
   theme_light()
 
 #side by side bar plot
-ggplot(combined, aes(x = health_f.x, fill = address)) +
+ggplot(combined, aes(x = health_f.x, fill = address_f.x)) +
   geom_bar(position = "dodge") +
   labs(title = "Side by Side Bar Chart", x = "Health", y = "Observations") + 
   theme_light()
@@ -224,10 +236,9 @@ The tables below take a similar approach to the first but have added a grouping 
 
 
 MeasureAndSpread2 <- list(
-combined |> group_by(school)|> summarize(across(age,.fns = fxlist,.names = "{.col}_{.fn}")),
-combined |> group_by(school)|> summarize(across(absences.x,.fns = fxlist,.names = "{.col}_{.fn}")),
-combined |> group_by(school)|> summarize(across(G3.x,.fns = fxlist,.names = "{.col}_{.fn}"))
-)
+combined |> group_by(school_f.x)|> summarize(across(age,.fns = fxlist,.names = "{.col}_{.fn}")),
+combined |> group_by(school_f.x)|> summarize(across(absences.x,.fns = fxlist,.names = "{.col}_{.fn}")),
+combined |> group_by(school_f.x)|> summarize(across(G3.x,.fns = fxlist,.names = "{.col}_{.fn}")))
 
 MeasureAndSpread2
 ```
@@ -285,17 +296,6 @@ combined |>
 
 ```
 
-# Hist., Density, Boxplot
-
-```{r}
-# using technique of naming ggplot object and calling in later steps
-#g <- ggplot(combined, aes(x = absences.x, fill = sex))
-#g + geom_histogram( bins = 10, position = "dodge") + 
-   # geom_density(alpha = .4) + 
-#    labs(x = "Math Absences")
-
-```
-
 # Scatterplot Analyses
 
 ## Scatterplot 1 Math G3 Scores by Math Absences by school
@@ -305,7 +305,7 @@ In the scatterplot below, each dot represents a student's unique combination of 
 Most students had below 20 absences, and those with more tended to score worse on the assessment. Students in the MS school had fewer absences as a group than those in the GP school and they account for none of the outliers.
 
 ```{r}
-gs <- ggplot(combined, aes(x = absences.x, y = G3.x, color = school))
+gs <- ggplot(combined, aes(x = absences.x, y = G3.x, color = school_f.x))
 gs + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math Absences", y = "Math G3 Score")
 ```
 
@@ -314,14 +314,16 @@ gs + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math Absences", y = "Ma
 This scatterplot shows a strong linear relationship between the mathematics G1 score and the mathematics G3 score. Dot color denotes sex. The relationship appears consistent across sex.
 
 ```{r}
-gs2 <- ggplot(combined, aes(x = G1.x, y = G3.x, color = sex))
+gs2 <- ggplot(combined, aes(x = G1.x, y = G3.x, color = sex_f.x))
 gs2 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math G1 Score", y = "Math G3 Score")
 ```
 
-## Scatterplot 2 Math G3 Scores by Math G1 Scores by Sex
+## Scatterplot 2 Math G3 Scores by Math G2 Scores by Sex
+
+Below you can see the linear relationship between G3 and G2 is even stronger than G3 and G1 in the previous plot. The data points are bunched much closer to each other.
 
 ```{r}
-gs2 <- ggplot(combined, aes(x = G1.x, y = G3.x, color = sex))
+gs2 <- ggplot(combined, aes(x = G2.x, y = G3.x, color = sex_f.x))
 gs2 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math G1 Score", y = "Math G3 Score")
 ```
 
@@ -331,15 +333,15 @@ This plot shows a different presentation of the above information. Instead of ea
 
 ```{r}
 gs2 <- ggplot(combined, aes(x = G1.x, y = G3.x))
-gs2 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math G1 Score", y = "Math G3 Score") + facet_wrap(~sex) + theme_light()
+gs2 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math G1 Score", y = "Math G3 Score") + facet_wrap(~sex_f.x) + theme_light()
 ```
 
 ## Scatterplot with multi categorical facet
 
-More than one categorical value can be used to research the G1 to G3 relationship. The 2x2 plot below shows this relationship by sex and by school. The same positive linear relationship is seen across all quadrants though the GP school has many more data points.
+More than one categorical value can be used to research the G1 to G3 relationship. The 4x2 plot below shows this relationship by sex and by math study time. The same positive linear relationship is seen across all plots though fewer students studied more than 10 hours than any other study time category.
 
 ```{r}
 gs3 <- ggplot(combined, aes(x = G1.x, y = G3.x))
 gs3 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math G1 Score", y = "Math G3 Score") + 
-      facet_grid(rows = vars(school), cols = vars(sex))
+      facet_grid(rows = vars(studytime_f.x), cols = vars(sex_f.x))
 ```

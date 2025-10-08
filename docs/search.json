@@ -11,21 +11,21 @@
     "href": "homework5.html#simple-one-way-contingency",
     "title": "homework5",
     "section": "Simple one way contingency",
-    "text": "Simple one way contingency\nThis one way contingency table shows the number of students residing in each address type (R= Rural / U=Urban)\n\n#one way contingency table\ntable(combined$address)\n\n\n  R   U \n 67 253"
+    "text": "Simple one way contingency\nThis one way contingency table shows the number of students residing in each address type (R= Rural / U=Urban)\n\n#one way contingency table\ntable(combined$address_f.x)\n\n\nRural Urban \n   67   253"
   },
   {
     "objectID": "homework5.html#two-way-and-three-way-contingency",
     "href": "homework5.html#two-way-and-three-way-contingency",
     "title": "homework5",
     "section": "Two way and three way contingency",
-    "text": "Two way and three way contingency\nBelow are a two way and a three way contingency table. The two way shows the mother’s job by address type. The three way contingency table shows the first two way contingency table with its values split by a 3rd dimension the presence of family educational support (yes/no).\n\n#two way contingency table \ntable(combined$Mjob, combined$address)\n\n          \n            R  U\n  at_home  18 26\n  health    3 27\n  other    23 93\n  services 12 63\n  teacher  11 44\n\n#three way contingency table\ntable(combined$Mjob, combined$address, combined$famsup)\n\n, ,  = no\n\n          \n            R  U\n  at_home   7 10\n  health    1  6\n  other    11 41\n  services  2 22\n  teacher   4 13\n\n, ,  = yes\n\n          \n            R  U\n  at_home  11 16\n  health    2 21\n  other    12 52\n  services 10 41\n  teacher   7 31"
+    "text": "Two way and three way contingency\nBelow are a two way and a three way contingency table. The two way shows the mother’s job by address type. The three way contingency table shows the first two way contingency table with its values split by a 3rd dimension the presence of family educational support (yes/no).\n\n#two way contingency table \ntable(combined$Mjob, combined$address_f.x)\n\n          \n           Rural Urban\n  at_home     18    26\n  health       3    27\n  other       23    93\n  services    12    63\n  teacher     11    44\n\n#three way contingency table\ntable(combined$Mjob, combined$address_f.x, combined$famsup)\n\n, ,  = no\n\n          \n           Rural Urban\n  at_home      7    10\n  health       1     6\n  other       11    41\n  services     2    22\n  teacher      4    13\n\n, ,  = yes\n\n          \n           Rural Urban\n  at_home     11    16\n  health       2    21\n  other       12    52\n  services    10    41\n  teacher      7    31"
   },
   {
     "objectID": "homework5.html#conditional-two-way-table",
     "href": "homework5.html#conditional-two-way-table",
     "title": "homework5",
     "section": "Conditional two way table",
-    "text": "Conditional two way table\nThese two contingency tables demonstrate multiple ways to subset contingency table data - the first uses a filter function, and the second filters based on the 2nd item of the 3rd array dimension. Both methods return identical data.\n\n#conditional two way table - observe study time by sex where address is rural \n#create data subset before table()\nruraldata &lt;- combined |&gt; \n  filter(address == \"U\") \ntable(ruraldata$sex, ruraldata$studytime_f.x)\n\n   \n    &lt;2 hours 2-5 hours 5-10 hours &gt;10 hours\n  F       18        78         32        11\n  M       41        54         10         9\n\n#conditional two way table - observe study time by sex where address is urban\ntwoway_2 &lt;- table(combined$sex, combined$studytime_f.x, combined$address)\ntwoway_2[,,2] #selecting for urban [sex row, study time column,rural/urban]\n\n   \n    &lt;2 hours 2-5 hours 5-10 hours &gt;10 hours\n  F       18        78         32        11\n  M       41        54         10         9"
+    "text": "Conditional two way table\nThese two contingency tables demonstrate multiple ways to subset contingency table data - the first uses a filter function, and the second filters based on the 2nd item of the 3rd array dimension. Both methods return identical data.\n\n#conditional two way table - observe study time by sex where address is rural \n#create data subset before table()\nruraldata &lt;- combined |&gt; \n  filter(address == \"U\") \ntable(ruraldata$sex_f.x, ruraldata$studytime_f.x)\n\n        \n         &lt;2 hours 2-5 hours 5-10 hours &gt;10 hours\n  Male         41        54         10         9\n  Female       18        78         32        11\n\n#conditional two way table - observe study time by sex where address is urban\ntwoway_2 &lt;- table(combined$sex_f.x, combined$studytime_f.x, combined$address_f.x)\ntwoway_2[,,2] #selecting for urban [sex row, study time column,rural/urban]\n\n        \n         &lt;2 hours 2-5 hours 5-10 hours &gt;10 hours\n  Male         41        54         10         9\n  Female       18        78         32        11"
   },
   {
     "objectID": "homework5.html#dplyr-contingency-table",
@@ -39,7 +39,7 @@
     "href": "homework5.html#compare-stacked-with-side-by-side",
     "title": "homework5",
     "section": "Compare stacked with side by side",
-    "text": "Compare stacked with side by side\nTwo simple bar plots were created to demonstrate the different ways multiple categorical variables can be shown in a bar plot. One shows the total counts for the two groups stacked on top of each other. The other shows the two groups side-by-side, which can be easier to quickly read and interpret.\n\n#stacked bar plot\nggplot(combined, aes(x = health_f.x, fill = address)) +\n  geom_bar() +\n  labs(title = \"Stacked Bar Chart\",x = \"Health\", y = \"Observations\") +\n  theme_light()\n\n\n\n\n\n\n\n#side by side bar plot\nggplot(combined, aes(x = health_f.x, fill = address)) +\n  geom_bar(position = \"dodge\") +\n  labs(title = \"Side by Side Bar Chart\", x = \"Health\", y = \"Observations\") + \n  theme_light()"
+    "text": "Compare stacked with side by side\nTwo simple bar plots were created to demonstrate the different ways multiple categorical variables can be shown in a bar plot. One shows the total counts for the two groups stacked on top of each other. The other shows the two groups side-by-side, which can be easier to quickly read and interpret.\n\n#stacked bar plot\nggplot(combined, aes(x = health_f.x, fill = address_f.x)) +\n  geom_bar() +\n  labs(title = \"Stacked Bar Chart\",x = \"Health\", y = \"Observations\") +\n  theme_light()\n\n\n\n\n\n\n\n#side by side bar plot\nggplot(combined, aes(x = health_f.x, fill = address_f.x)) +\n  geom_bar(position = \"dodge\") +\n  labs(title = \"Side by Side Bar Chart\", x = \"Health\", y = \"Observations\") + \n  theme_light()"
   },
   {
     "objectID": "homework5.html#correlation-matrix-of-three-target-variables",
@@ -60,34 +60,34 @@
     "href": "homework5.html#scatterplot-1-math-g3-scores-by-math-absences-by-school",
     "title": "homework5",
     "section": "Scatterplot 1 Math G3 Scores by Math Absences by school",
-    "text": "Scatterplot 1 Math G3 Scores by Math Absences by school\nIn the scatterplot below, each dot represents a student’s unique combination of school they attend, mathematics absences and math G3 score. What school they attended is noted by their dot color.\nMost students had below 20 absences, and those with more tended to score worse on the assessment. Students in the MS school had fewer absences as a group than those in the GP school and they account for none of the outliers.\n\ngs &lt;- ggplot(combined, aes(x = absences.x, y = G3.x, color = school))\ngs + geom_point() + geom_jitter(alpha = 0.5) + labs(x = \"Math Absences\", y = \"Math G3 Score\")"
+    "text": "Scatterplot 1 Math G3 Scores by Math Absences by school\nIn the scatterplot below, each dot represents a student’s unique combination of school they attend, mathematics absences and math G3 score. What school they attended is noted by their dot color.\nMost students had below 20 absences, and those with more tended to score worse on the assessment. Students in the MS school had fewer absences as a group than those in the GP school and they account for none of the outliers.\n\ngs &lt;- ggplot(combined, aes(x = absences.x, y = G3.x, color = school_f.x))\ngs + geom_point() + geom_jitter(alpha = 0.5) + labs(x = \"Math Absences\", y = \"Math G3 Score\")"
   },
   {
     "objectID": "homework5.html#scatterplot-2-math-g3-scores-by-math-g1-scores-by-sex",
     "href": "homework5.html#scatterplot-2-math-g3-scores-by-math-g1-scores-by-sex",
     "title": "homework5",
     "section": "Scatterplot 2 Math G3 Scores by Math G1 Scores by Sex",
-    "text": "Scatterplot 2 Math G3 Scores by Math G1 Scores by Sex\nThis scatterplot shows a strong linear relationship between the mathematics G1 score and the mathematics G3 score. Dot color denotes sex. The relationship appears consistent across sex.\n\ngs2 &lt;- ggplot(combined, aes(x = G1.x, y = G3.x, color = sex))\ngs2 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = \"Math G1 Score\", y = \"Math G3 Score\")"
+    "text": "Scatterplot 2 Math G3 Scores by Math G1 Scores by Sex\nThis scatterplot shows a strong linear relationship between the mathematics G1 score and the mathematics G3 score. Dot color denotes sex. The relationship appears consistent across sex.\n\ngs2 &lt;- ggplot(combined, aes(x = G1.x, y = G3.x, color = sex_f.x))\ngs2 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = \"Math G1 Score\", y = \"Math G3 Score\")"
   },
   {
-    "objectID": "homework5.html#scatterplot-2-math-g3-scores-by-math-g1-scores-by-sex-1",
-    "href": "homework5.html#scatterplot-2-math-g3-scores-by-math-g1-scores-by-sex-1",
+    "objectID": "homework5.html#scatterplot-2-math-g3-scores-by-math-g2-scores-by-sex",
+    "href": "homework5.html#scatterplot-2-math-g3-scores-by-math-g2-scores-by-sex",
     "title": "homework5",
-    "section": "Scatterplot 2 Math G3 Scores by Math G1 Scores by Sex",
-    "text": "Scatterplot 2 Math G3 Scores by Math G1 Scores by Sex\n\ngs2 &lt;- ggplot(combined, aes(x = G1.x, y = G3.x, color = sex))\ngs2 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = \"Math G1 Score\", y = \"Math G3 Score\")"
+    "section": "Scatterplot 2 Math G3 Scores by Math G2 Scores by Sex",
+    "text": "Scatterplot 2 Math G3 Scores by Math G2 Scores by Sex\nBelow you can see the linear relationship between G3 and G2 is even stronger than G3 and G1 in the previous plot. The data points are bunched much closer to each other.\n\ngs2 &lt;- ggplot(combined, aes(x = G2.x, y = G3.x, color = sex_f.x))\ngs2 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = \"Math G1 Score\", y = \"Math G3 Score\")"
   },
   {
     "objectID": "homework5.html#scatterplot-with-facet",
     "href": "homework5.html#scatterplot-with-facet",
     "title": "homework5",
     "section": "Scatterplot with facet",
-    "text": "Scatterplot with facet\nThis plot shows a different presentation of the above information. Instead of each dot being a distinct color - males and females have their own scatterplot side by side. The male scores appear slightly more widely dispersed than the female scores.\n\ngs2 &lt;- ggplot(combined, aes(x = G1.x, y = G3.x))\ngs2 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = \"Math G1 Score\", y = \"Math G3 Score\") + facet_wrap(~sex) + theme_light()"
+    "text": "Scatterplot with facet\nThis plot shows a different presentation of the above information. Instead of each dot being a distinct color - males and females have their own scatterplot side by side. The male scores appear slightly more widely dispersed than the female scores.\n\ngs2 &lt;- ggplot(combined, aes(x = G1.x, y = G3.x))\ngs2 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = \"Math G1 Score\", y = \"Math G3 Score\") + facet_wrap(~sex_f.x) + theme_light()"
   },
   {
     "objectID": "homework5.html#scatterplot-with-multi-categorical-facet",
     "href": "homework5.html#scatterplot-with-multi-categorical-facet",
     "title": "homework5",
     "section": "Scatterplot with multi categorical facet",
-    "text": "Scatterplot with multi categorical facet\nMore than one categorical value can be used to research the G1 to G3 relationship. The 2x2 plot below shows this relationship by sex and by school. The same positive linear relationship is seen across all quadrants though the GP school has many more data points.\n\ngs3 &lt;- ggplot(combined, aes(x = G1.x, y = G3.x))\ngs3 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = \"Math G1 Score\", y = \"Math G3 Score\") + \n      facet_grid(rows = vars(school), cols = vars(sex))"
+    "text": "Scatterplot with multi categorical facet\nMore than one categorical value can be used to research the G1 to G3 relationship. The 4x2 plot below shows this relationship by sex and by math study time. The same positive linear relationship is seen across all plots though fewer students studied more than 10 hours than any other study time category.\n\ngs3 &lt;- ggplot(combined, aes(x = G1.x, y = G3.x))\ngs3 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = \"Math G1 Score\", y = \"Math G3 Score\") + \n      facet_grid(rows = vars(studytime_f.x), cols = vars(sex_f.x))"
   }
 ]
