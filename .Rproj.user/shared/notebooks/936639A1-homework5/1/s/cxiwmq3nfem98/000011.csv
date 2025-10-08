@@ -1,2 +1,7 @@
-"1","[[1]]
-"
+"0",""
+"0","#side by side bar plot"
+"0","ggplot(combined, aes(x = health_f.x, fill = address)) +"
+"0","  geom_bar(position = ""dodge"") +"
+"0","  labs(title = ""Side by Side Bar Chart"", x = ""Health"", y = ""Observations"") + "
+"0","  theme_light()"
+"0",""

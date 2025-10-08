@@ -7,11 +7,11 @@ editor: visual
 ```{r}
 library(tidyverse)
 library(psych)
-library(RColorBrewer)
-library(GGally)
 ```
 
 # Read in UCI Data
+
+Initially read in data using provided code including the merge-join based on original 13 variables.
 
 ```{r}
 #use r code provided in download... already suitable to read files from project folder
@@ -24,6 +24,13 @@ d3=merge(d1,d2,by=c("school","sex","age","address","famsize","Pstatus","Medu","F
 ```
 
 # Tidyverse Read in Data
+
+Use tidyverse functions to read in data and use original 13 suggested variables as inner join criteria. This leads to a many:many relationship which suggests the 13 field combinations are not specific enough.
+
+-   The Mat dataset shows student demographic information and test scores from a mathematics class. This is the "LEFT" dataset in the join and data elements exclusive to it end in ".x"
+
+-   The Por dataset shows student demographic information and test scores from a Portuguese class. This is the "RIGHT" dataset in the join and data elements exclusive to it end in ".y"
+
 ```{r}
 #same work done using tidyverse functions
 mat <- as_tibble(read_delim("student-mat.csv", delim = ";", col_names = TRUE))
@@ -37,7 +44,7 @@ InitialJoin <- inner_join(mat, por, by = join_by("school","sex","age","address",
 ```
 
 # Assign factors for categorical variables
-# Loop to add factors to all tibbles
+
 ```{r}
 
 mat <-  mat |>
@@ -69,6 +76,9 @@ por <-  por |>
 ```
 
 # Final Join
+
+This inner join uses all variables EXCEPT G1, G2, G3, paid and absences. The four factor variables are also excluded as join criteria.
+
 ```{r}
 #join by every field except response variables
 #no many:many join message
@@ -83,6 +93,13 @@ rm(d1,d2,d3,InitialJoin)
 ```
 
 # Initial EDA
+
+These analyses demonstrate:
+
+1.  The full combined dataset.
+2.  Descriptive statistics for all dataset variables. Some of the variables are coded in such a way that many statistics such as the "address" field having a numeric mean.
+3.  Two methods are used to find missing data values - there are no missing values for any variable in the dataset.
+
 ```{r}
 #view tibble - observe sample of values
 combined
@@ -105,34 +122,40 @@ na_counts
 ```
 
 # Contingency Tables
+
 ## Simple one way contingency
+
+This one way contingency table shows the number of students residing in each address type (R= Rural / U=Urban)
+
 ```{r}
-#one way contingency table - record count by Mother's Job
+#one way contingency table
 table(combined$address)
 
 ```
 
-## Two way contingency
+## Two way and three way contingency
+
+Below are a two way and a three way contingency table. The two way shows the mother's job by address type. The three way contingency table shows the first two way contingency table with its values split by a 3rd dimension the presence of family educational support (yes/no).
+
 ```{r}
-#two way contingency table - record counts by Mother's job and address (Rural/Urban)
+#two way contingency table 
 table(combined$Mjob, combined$address)
 
-```
-
-## Three way contingency
-```{r}
-#three way contingency table - record counts by Mother's job, address, and a 3rd dimension - presence of family educational support (yes/no)
+#three way contingency table
 table(combined$Mjob, combined$address, combined$famsup)
 
 ```
 
 ## Conditional two way table
+
+These two contingency tables demonstrate multiple ways to subset contingency table data - the first uses a filter function, and the second filters based on the 2nd item of the 3rd array dimension. Both methods return identical data.
+
 ```{r}
 
 #conditional two way table - observe study time by sex where address is rural 
 #create data subset before table()
 ruraldata <- combined |> 
-  filter(address == "R") 
+  filter(address == "U") 
 table(ruraldata$sex, ruraldata$studytime_f.x)
 
 
@@ -142,6 +165,8 @@ twoway_2[,,2] #selecting for urban [sex row, study time column,rural/urban]
 ```
 
 ## dplyr contingency table
+
+Dplyr group_by and summarize functions are used to create counts by weekly alcohol use and health status. This original structure included a row for each combination of the two categorical variables. Pivot wider creates new columns from repeating values from an existing column - Walc_f.x.
 
 ```{r}
 #observe count of health status across levels of reported weekly alcohol use
@@ -153,7 +178,11 @@ combined |>
 ```
 
 # Initial Bar Plots
+
 ## Compare stacked with side by side
+
+Two simple bar plots were created to demonstrate the different ways multiple categorical variables can be shown in a bar plot. One shows the total counts for the two groups stacked on top of each other. The other shows the two groups side-by-side, which can be easier to quickly read and interpret.
+
 ```{r}
 
 #stacked bar plot
@@ -172,6 +201,8 @@ ggplot(combined, aes(x = health_f.x, fill = address)) +
 
 # Numeric Variables
 
+5 measures of center and spread: mean, median, variance, standard deviation, and interquartile range were used to describe three numeric variables (student age, mathematics class absences, and the final G3 mathematics assessment score.
+
 ```{r}
 #Measures of Center and Spread
 fxlist <- list("mean" = mean, "median" = median, "var" = var, "sd" = sd, "IQR" = IQR)
@@ -186,6 +217,7 @@ MeasureAndSpread1
 
 ```
 
+The tables below take a similar approach to the first but have added a grouping variable, school. This helps one understand differences in students across the schools.
 
 ```{r}
 #Overall age absences and G3 across school
@@ -200,6 +232,7 @@ combined |> group_by(school)|> summarize(across(G3.x,.fns = fxlist,.names = "{.c
 MeasureAndSpread2
 ```
 
+Below the same information is repeated with a subset for the GP school.
 
 ```{r}
 #subset for GP school
@@ -213,6 +246,8 @@ combinedgp |> summarize(across(G3.x,.fns = fxlist,.names = "{.col}_{.fn}"))
 MeasureAndSpread3
 ```
 
+Two categorical values: reason the student chose their school and the school they chose, are used to group descriptive statistics.
+
 ```{r}
 #Measures across two variables: reason for choosing school and the school that was chosen. 
 MeasureAndSpread4 <- list(
@@ -225,7 +260,11 @@ MeasureAndSpread4
 ```
 
 # Correlation Matrix
+
 ## correlation matrix of three target variables
+
+The correlation matrix below shows how three numeric variables: age, mathematics absences, and final mathematics assessment are correlated with each other. There are no particularly strong linear associations between the three variables.
+
 ```{r}
 
 combined |>
@@ -235,6 +274,9 @@ combined |>
 ```
 
 ## correlation matrix for all numeric variables in combined dataset
+
+For reference, a correlation matrix can easily be computed for all numeric variables in the dataset by taking advantage of the where(is.numeric) function. To properly interpret these some of these correlations prior knowledge is needed as some are discrete numerical values and others may be coded numeric values that represent categorical or ordinal data.
+
 ```{r}
 
 combined |>
@@ -244,6 +286,7 @@ combined |>
 ```
 
 # Hist., Density, Boxplot
+
 ```{r}
 # using technique of naming ggplot object and calling in later steps
 #g <- ggplot(combined, aes(x = absences.x, fill = sex))
@@ -254,34 +297,49 @@ combined |>
 ```
 
 # Scatterplot Analyses
+
 ## Scatterplot 1 Math G3 Scores by Math Absences by school
+
+In the scatterplot below, each dot represents a student's unique combination of school they attend, mathematics absences and math G3 score. What school they attended is noted by their dot color.
+
+Most students had below 20 absences, and those with more tended to score worse on the assessment. Students in the MS school had fewer absences as a group than those in the GP school and they account for none of the outliers.
+
 ```{r}
 gs <- ggplot(combined, aes(x = absences.x, y = G3.x, color = school))
 gs + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math Absences", y = "Math G3 Score")
 ```
 
 ## Scatterplot 2 Math G3 Scores by Math G1 Scores by Sex
+
+This scatterplot shows a strong linear relationship between the mathematics G1 score and the mathematics G3 score. Dot color denotes sex. The relationship appears consistent across sex.
+
 ```{r}
 gs2 <- ggplot(combined, aes(x = G1.x, y = G3.x, color = sex))
 gs2 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math G1 Score", y = "Math G3 Score")
 ```
 
 ## Scatterplot 2 Math G3 Scores by Math G1 Scores by Sex
+
 ```{r}
 gs2 <- ggplot(combined, aes(x = G1.x, y = G3.x, color = sex))
 gs2 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math G1 Score", y = "Math G3 Score")
 ```
 
 ## Scatterplot with facet
+
+This plot shows a different presentation of the above information. Instead of each dot being a distinct color - males and females have their own scatterplot side by side. The male scores appear slightly more widely dispersed than the female scores.
+
 ```{r}
 gs2 <- ggplot(combined, aes(x = G1.x, y = G3.x))
 gs2 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math G1 Score", y = "Math G3 Score") + facet_wrap(~sex) + theme_light()
 ```
 
 ## Scatterplot with multi categorical facet
+
+More than one categorical value can be used to research the G1 to G3 relationship. The 2x2 plot below shows this relationship by sex and by school. The same positive linear relationship is seen across all quadrants though the GP school has many more data points.
+
 ```{r}
 gs3 <- ggplot(combined, aes(x = G1.x, y = G3.x))
 gs3 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = "Math G1 Score", y = "Math G3 Score") + 
       facet_grid(rows = vars(school), cols = vars(sex))
 ```
-

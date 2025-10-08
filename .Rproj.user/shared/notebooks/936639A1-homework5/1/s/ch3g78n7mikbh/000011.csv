@@ -1,2 +1,0 @@
-"0","gs2 <- ggplot(combined, aes(x = G1.x, y = G3.x))"
-"0","gs2 + geom_point() + geom_jitter(alpha = 0.5) + labs(x = ""Math G1 Score"", y = ""Math G3 Score"") + facet_wrap(~sex) + theme_light()"

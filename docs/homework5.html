@@ -183,28 +183,29 @@ The following objects are masked from 'package:ggplot2':
 
     %+%, alpha</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'GGally' was built under R version 4.4.3</code></pre>
-</div>
 </div>
 <section id="read-in-uci-data" class="level1">
 <h1>Read in UCI Data</h1>
+<p>Initially read in data using provided code including the merge-join based on original 13 variables.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#use r code provided in download... already suitable to read files from project folder</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>d1<span class="ot">=</span><span class="fu">read.table</span>(<span class="st">"student-mat.csv"</span>,<span class="at">sep=</span><span class="st">";"</span>,<span class="at">header=</span><span class="cn">TRUE</span>)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>d2<span class="ot">=</span><span class="fu">read.table</span>(<span class="st">"student-por.csv"</span>,<span class="at">sep=</span><span class="st">";"</span>,<span class="at">header=</span><span class="cn">TRUE</span>)</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>d3<span class="ot">=</span><span class="fu">merge</span>(d1,d2,<span class="at">by=</span><span class="fu">c</span>(<span class="st">"school"</span>,<span class="st">"sex"</span>,<span class="st">"age"</span>,<span class="st">"address"</span>,<span class="st">"famsize"</span>,<span class="st">"Pstatus"</span>,<span class="st">"Medu"</span>,<span class="st">"Fedu"</span>,<span class="st">"Mjob"</span>,<span class="st">"Fjob"</span>,<span class="st">"reason"</span>,<span class="st">"nursery"</span>,<span class="st">"internet"</span>))</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co">#print(nrow(d3)) # 382 students</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#use r code provided in download... already suitable to read files from project folder</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>d1<span class="ot">=</span><span class="fu">read.table</span>(<span class="st">"student-mat.csv"</span>,<span class="at">sep=</span><span class="st">";"</span>,<span class="at">header=</span><span class="cn">TRUE</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>d2<span class="ot">=</span><span class="fu">read.table</span>(<span class="st">"student-por.csv"</span>,<span class="at">sep=</span><span class="st">";"</span>,<span class="at">header=</span><span class="cn">TRUE</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>d3<span class="ot">=</span><span class="fu">merge</span>(d1,d2,<span class="at">by=</span><span class="fu">c</span>(<span class="st">"school"</span>,<span class="st">"sex"</span>,<span class="st">"age"</span>,<span class="st">"address"</span>,<span class="st">"famsize"</span>,<span class="st">"Pstatus"</span>,<span class="st">"Medu"</span>,<span class="st">"Fedu"</span>,<span class="st">"Mjob"</span>,<span class="st">"Fjob"</span>,<span class="st">"reason"</span>,<span class="st">"nursery"</span>,<span class="st">"internet"</span>))</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">#print(nrow(d3)) # 382 students</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="tidyverse-read-in-data" class="level1">
 <h1>Tidyverse Read in Data</h1>
+<p>Use tidyverse functions to read in data and use original 13 suggested variables as inner join criteria. This leads to a many:many relationship which suggests the 13 field combinations are not specific enough.</p>
+<ul>
+<li><p>The Mat dataset shows student demographic information and test scores from a mathematics class. This is the “LEFT” dataset in the join and data elements exclusive to it end in “.x”</p></li>
+<li><p>The Por dataset shows student demographic information and test scores from a Portuguese class. This is the “RIGHT” dataset in the join and data elements exclusive to it end in “.y”</p></li>
+</ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#same work done using tidyverse functions</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>mat <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(<span class="fu">read_delim</span>(<span class="st">"student-mat.csv"</span>, <span class="at">delim =</span> <span class="st">";"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#same work done using tidyverse functions</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>mat <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(<span class="fu">read_delim</span>(<span class="st">"student-mat.csv"</span>, <span class="at">delim =</span> <span class="st">";"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 395 Columns: 33
 ── Column specification ────────────────────────────────────────────────────────
@@ -215,7 +216,7 @@ dbl (16): age, Medu, Fedu, traveltime, studytime, failures, famrel, freetime...
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>por <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(<span class="fu">read_delim</span>(<span class="st">"student-por.csv"</span>, <span class="at">delim =</span> <span class="st">";"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>por <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(<span class="fu">read_delim</span>(<span class="st">"student-por.csv"</span>, <span class="at">delim =</span> <span class="st">";"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 649 Columns: 33
 ── Column specification ────────────────────────────────────────────────────────
@@ -226,8 +227,8 @@ dbl (16): age, Medu, Fedu, traveltime, studytime, failures, famrel, freetime...
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#result is many:many join - these fields are not specific enough</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>InitialJoin <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(mat, por, <span class="at">by =</span> <span class="fu">join_by</span>(<span class="st">"school"</span>,<span class="st">"sex"</span>,<span class="st">"age"</span>,<span class="st">"address"</span>,<span class="st">"famsize"</span>,<span class="st">"Pstatus"</span>,<span class="st">"Medu"</span>,<span class="st">"Fedu"</span>,<span class="st">"Mjob"</span>,<span class="st">"Fjob"</span>,<span class="st">"reason"</span>,<span class="st">"nursery"</span>,<span class="st">"internet"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">#result is many:many join - these fields are not specific enough</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>InitialJoin <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(mat, por, <span class="at">by =</span> <span class="fu">join_by</span>(<span class="st">"school"</span>,<span class="st">"sex"</span>,<span class="st">"age"</span>,<span class="st">"address"</span>,<span class="st">"famsize"</span>,<span class="st">"Pstatus"</span>,<span class="st">"Medu"</span>,<span class="st">"Fedu"</span>,<span class="st">"Mjob"</span>,<span class="st">"Fjob"</span>,<span class="st">"reason"</span>,<span class="st">"nursery"</span>,<span class="st">"internet"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in inner_join(mat, por, by = join_by("school", "sex", "age", "address", : Detected an unexpected many-to-many relationship between `x` and `y`.
 ℹ Row 79 of `x` matches multiple rows in `y`.
@@ -239,55 +240,59 @@ dbl (16): age, Medu, Fedu, traveltime, studytime, failures, famrel, freetime...
 </section>
 <section id="assign-factors-for-categorical-variables" class="level1">
 <h1>Assign factors for categorical variables</h1>
-</section>
-<section id="loop-to-add-factors-to-all-tibbles" class="level1">
-<h1>Loop to add factors to all tibbles</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>mat <span class="ot">&lt;-</span>  mat <span class="sc">|&gt;</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">health_f =</span> <span class="fu">factor</span>(health,<span class="at">levels =</span> <span class="fu">c</span>(<span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)),</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"very bad"</span>,<span class="st">"bad"</span>,<span class="st">"neutral"</span>,<span class="st">"good"</span>,<span class="st">"very good"</span>)),</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Walc_f =</span> <span class="fu">factor</span>(Walc,<span class="at">levels =</span> <span class="fu">c</span>(<span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)),</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"very low"</span>, <span class="st">"low"</span>, <span class="st">"0-avg"</span>,<span class="st">"high"</span>,<span class="st">"very high"</span>)),</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Dalc_f =</span> <span class="fu">factor</span>(Dalc,<span class="at">levels =</span> <span class="fu">c</span>(<span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)),</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"very low"</span>, <span class="st">"low"</span>, <span class="st">"0-avg"</span>,<span class="st">"high"</span>,<span class="st">"very high"</span>)),</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">studytime_f =</span> <span class="fu">factor</span>(studytime,<span class="at">levels =</span> <span class="fu">c</span>(<span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)),</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"&lt;2 hours"</span>, <span class="st">"2-5 hours"</span>, <span class="st">"5-10 hours"</span>,<span class="st">"&gt;10 hours"</span>))</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>por <span class="ot">&lt;-</span>  por <span class="sc">|&gt;</span></span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">health_f =</span> <span class="fu">factor</span>(health,<span class="at">levels =</span> <span class="fu">c</span>(<span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)),</span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>                     <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"very bad"</span>,<span class="st">"bad"</span>,<span class="st">"neutral"</span>,<span class="st">"good"</span>,<span class="st">"very good"</span>)),</span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">Walc_f =</span> <span class="fu">factor</span>(Walc,<span class="at">levels =</span> <span class="fu">c</span>(<span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)),</span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"very low"</span>, <span class="st">"low"</span>, <span class="st">"0-avg"</span>,<span class="st">"high"</span>,<span class="st">"very high"</span>)),</span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">Dalc_f =</span> <span class="fu">factor</span>(Dalc,<span class="at">levels =</span> <span class="fu">c</span>(<span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)),</span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"very low"</span>, <span class="st">"low"</span>, <span class="st">"0-avg"</span>,<span class="st">"high"</span>,<span class="st">"very high"</span>)),</span>
-<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">studytime_f =</span> <span class="fu">factor</span>(studytime,<span class="at">levels =</span> <span class="fu">c</span>(<span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)),</span>
-<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"&lt;2 hours"</span>, <span class="st">"2-5 hours"</span>, <span class="st">"5-10 hours"</span>,<span class="st">"&gt;10 hours"</span>))</span>
-<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>mat <span class="ot">&lt;-</span>  mat <span class="sc">|&gt;</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">health_f =</span> <span class="fu">factor</span>(health,<span class="at">levels =</span> <span class="fu">c</span>(<span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)),</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"very bad"</span>,<span class="st">"bad"</span>,<span class="st">"neutral"</span>,<span class="st">"good"</span>,<span class="st">"very good"</span>)),</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Walc_f =</span> <span class="fu">factor</span>(Walc,<span class="at">levels =</span> <span class="fu">c</span>(<span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)),</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"very low"</span>, <span class="st">"low"</span>, <span class="st">"0-avg"</span>,<span class="st">"high"</span>,<span class="st">"very high"</span>)),</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Dalc_f =</span> <span class="fu">factor</span>(Dalc,<span class="at">levels =</span> <span class="fu">c</span>(<span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)),</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"very low"</span>, <span class="st">"low"</span>, <span class="st">"0-avg"</span>,<span class="st">"high"</span>,<span class="st">"very high"</span>)),</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">studytime_f =</span> <span class="fu">factor</span>(studytime,<span class="at">levels =</span> <span class="fu">c</span>(<span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)),</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"&lt;2 hours"</span>, <span class="st">"2-5 hours"</span>, <span class="st">"5-10 hours"</span>,<span class="st">"&gt;10 hours"</span>))</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>por <span class="ot">&lt;-</span>  por <span class="sc">|&gt;</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">health_f =</span> <span class="fu">factor</span>(health,<span class="at">levels =</span> <span class="fu">c</span>(<span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)),</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>                     <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"very bad"</span>,<span class="st">"bad"</span>,<span class="st">"neutral"</span>,<span class="st">"good"</span>,<span class="st">"very good"</span>)),</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">Walc_f =</span> <span class="fu">factor</span>(Walc,<span class="at">levels =</span> <span class="fu">c</span>(<span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)),</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"very low"</span>, <span class="st">"low"</span>, <span class="st">"0-avg"</span>,<span class="st">"high"</span>,<span class="st">"very high"</span>)),</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">Dalc_f =</span> <span class="fu">factor</span>(Dalc,<span class="at">levels =</span> <span class="fu">c</span>(<span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)),</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"very low"</span>, <span class="st">"low"</span>, <span class="st">"0-avg"</span>,<span class="st">"high"</span>,<span class="st">"very high"</span>)),</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">studytime_f =</span> <span class="fu">factor</span>(studytime,<span class="at">levels =</span> <span class="fu">c</span>(<span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)),</span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"&lt;2 hours"</span>, <span class="st">"2-5 hours"</span>, <span class="st">"5-10 hours"</span>,<span class="st">"&gt;10 hours"</span>))</span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="final-join" class="level1">
 <h1>Final Join</h1>
+<p>This inner join uses all variables EXCEPT G1, G2, G3, paid and absences. The four factor variables are also excluded as join criteria.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#join by every field except response variables</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co">#no many:many join message</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>combined <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(mat, por, </span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">by =</span> <span class="fu">names</span>(<span class="fu">select</span>(mat,<span class="fu">everything</span>(), <span class="sc">-</span><span class="fu">c</span>(<span class="st">"G1"</span>,<span class="st">"G2"</span>,<span class="st">"G3"</span>,<span class="st">"paid"</span>,<span class="st">"absences"</span>,<span class="st">"health_f"</span>,<span class="st">"Walc_f"</span>,<span class="st">"Dalc_f"</span>,<span class="st">"studytime_f"</span>)))</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>             )</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co">#clear initial imports out of environment</span></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(d1,d2,d3,InitialJoin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#join by every field except response variables</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co">#no many:many join message</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>combined <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(mat, por, </span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">by =</span> <span class="fu">names</span>(<span class="fu">select</span>(mat,<span class="fu">everything</span>(), <span class="sc">-</span><span class="fu">c</span>(<span class="st">"G1"</span>,<span class="st">"G2"</span>,<span class="st">"G3"</span>,<span class="st">"paid"</span>,<span class="st">"absences"</span>,<span class="st">"health_f"</span>,<span class="st">"Walc_f"</span>,<span class="st">"Dalc_f"</span>,<span class="st">"studytime_f"</span>)))</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>             )</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co">#clear initial imports out of environment</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(d1,d2,d3,InitialJoin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="initial-eda" class="level1">
 <h1>Initial EDA</h1>
+<p>These analyses demonstrate:</p>
+<ol type="1">
+<li>The full combined dataset.</li>
+<li>Descriptive statistics for all dataset variables. Some of the variables are coded in such a way that many statistics such as the “address” field having a numeric mean.</li>
+<li>Two methods are used to find missing data values - there are no missing values for any variable in the dataset.</li>
+</ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">#view tibble - observe sample of values</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>combined</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#view tibble - observe sample of values</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>combined</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 320 × 46
    school sex     age address famsize Pstatus  Medu  Fedu Mjob     Fjob   reason
@@ -310,8 +315,8 @@ dbl (16): age, Medu, Fedu, traveltime, studytime, failures, famrel, freetime...
 #   Walc &lt;dbl&gt;, health &lt;dbl&gt;, absences.x &lt;dbl&gt;, G1.x &lt;dbl&gt;, G2.x &lt;dbl&gt;,
 #   G3.x &lt;dbl&gt;, health_f.x &lt;fct&gt;, Walc_f.x &lt;fct&gt;, Dalc_f.x &lt;fct&gt;, …</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">#use describe() to get descriptive statistics on all variables</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>psych<span class="sc">::</span><span class="fu">describe</span>(combined)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">#use describe() to get descriptive statistics on all variables</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>psych<span class="sc">::</span><span class="fu">describe</span>(combined)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               vars   n  mean   sd median trimmed  mad min max range  skew
 school*           1 320  1.10 0.30    1.0    1.00 0.00   1   2     1  2.60
@@ -408,9 +413,9 @@ Walc_f.y*         -0.69 0.07
 Dalc_f.y*          5.32 0.05
 studytime_f.y*    -0.20 0.05</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">#determine missing rate using function in lecture</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="do">##no missing values identified throughout entire dataset</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(combined))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">#determine missing rate using function in lecture</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="do">##no missing values identified throughout entire dataset</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(combined))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       school           sex           age       address       famsize 
             0             0             0             0             0 
@@ -433,13 +438,13 @@ studytime_f.y*    -0.20 0.05</code></pre>
 studytime_f.y 
             0 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>sum_na <span class="ot">&lt;-</span> <span class="cf">function</span>(column){</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(<span class="fu">is.na</span>(column))</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>na_counts <span class="ot">&lt;-</span> combined <span class="sc">|&gt;</span></span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), sum_na))</span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>na_counts</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>sum_na <span class="ot">&lt;-</span> <span class="cf">function</span>(column){</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(<span class="fu">is.na</span>(column))</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>na_counts <span class="ot">&lt;-</span> combined <span class="sc">|&gt;</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), sum_na))</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>na_counts</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 46
   school   sex   age address famsize Pstatus  Medu  Fedu  Mjob  Fjob reason
@@ -459,9 +464,10 @@ studytime_f.y
 <h1>Contingency Tables</h1>
 <section id="simple-one-way-contingency" class="level2">
 <h2 class="anchored" data-anchor-id="simple-one-way-contingency">Simple one way contingency</h2>
+<p>This one way contingency table shows the number of students residing in each address type (R= Rural / U=Urban)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">#one way contingency table - record count by Mother's Job</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(combined<span class="sc">$</span>address)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">#one way contingency table</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(combined<span class="sc">$</span>address)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
   R   U 
@@ -469,11 +475,12 @@ studytime_f.y
 </div>
 </div>
 </section>
-<section id="two-way-contingency" class="level2">
-<h2 class="anchored" data-anchor-id="two-way-contingency">Two way contingency</h2>
+<section id="two-way-and-three-way-contingency" class="level2">
+<h2 class="anchored" data-anchor-id="two-way-and-three-way-contingency">Two way and three way contingency</h2>
+<p>Below are a two way and a three way contingency table. The two way shows the mother’s job by address type. The three way contingency table shows the first two way contingency table with its values split by a 3rd dimension the presence of family educational support (yes/no).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co">#two way contingency table - record counts by Mother's job and address (Rural/Urban)</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(combined<span class="sc">$</span>Mjob, combined<span class="sc">$</span>address)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">#two way contingency table </span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(combined<span class="sc">$</span>Mjob, combined<span class="sc">$</span>address)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          
             R  U
@@ -483,13 +490,8 @@ studytime_f.y
   services 12 63
   teacher  11 44</code></pre>
 </div>
-</div>
-</section>
-<section id="three-way-contingency" class="level2">
-<h2 class="anchored" data-anchor-id="three-way-contingency">Three way contingency</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co">#three way contingency table - record counts by Mother's job, address, and a 3rd dimension - presence of family educational support (yes/no)</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(combined<span class="sc">$</span>Mjob, combined<span class="sc">$</span>address, combined<span class="sc">$</span>famsup)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co">#three way contingency table</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(combined<span class="sc">$</span>Mjob, combined<span class="sc">$</span>address, combined<span class="sc">$</span>famsup)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>, ,  = no
 
@@ -515,21 +517,22 @@ studytime_f.y
 </section>
 <section id="conditional-two-way-table" class="level2">
 <h2 class="anchored" data-anchor-id="conditional-two-way-table">Conditional two way table</h2>
+<p>These two contingency tables demonstrate multiple ways to subset contingency table data - the first uses a filter function, and the second filters based on the 2nd item of the 3rd array dimension. Both methods return identical data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">#conditional two way table - observe study time by sex where address is rural </span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="co">#create data subset before table()</span></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>ruraldata <span class="ot">&lt;-</span> combined <span class="sc">|&gt;</span> </span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(address <span class="sc">==</span> <span class="st">"R"</span>) </span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(ruraldata<span class="sc">$</span>sex, ruraldata<span class="sc">$</span>studytime_f.x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co">#conditional two way table - observe study time by sex where address is rural </span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="co">#create data subset before table()</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>ruraldata <span class="ot">&lt;-</span> combined <span class="sc">|&gt;</span> </span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(address <span class="sc">==</span> <span class="st">"U"</span>) </span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(ruraldata<span class="sc">$</span>sex, ruraldata<span class="sc">$</span>studytime_f.x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   
     &lt;2 hours 2-5 hours 5-10 hours &gt;10 hours
-  F        7        13         10         5
-  M       15        12          4         1</code></pre>
+  F       18        78         32        11
+  M       41        54         10         9</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co">#conditional two way table - observe study time by sex where address is urban</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>twoway_2 <span class="ot">&lt;-</span> <span class="fu">table</span>(combined<span class="sc">$</span>sex, combined<span class="sc">$</span>studytime_f.x, combined<span class="sc">$</span>address)</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>twoway_2[,,<span class="dv">2</span>] <span class="co">#selecting for urban [sex row, study time column,rural/urban]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">#conditional two way table - observe study time by sex where address is urban</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>twoway_2 <span class="ot">&lt;-</span> <span class="fu">table</span>(combined<span class="sc">$</span>sex, combined<span class="sc">$</span>studytime_f.x, combined<span class="sc">$</span>address)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>twoway_2[,,<span class="dv">2</span>] <span class="co">#selecting for urban [sex row, study time column,rural/urban]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   
     &lt;2 hours 2-5 hours 5-10 hours &gt;10 hours
@@ -540,13 +543,14 @@ studytime_f.y
 </section>
 <section id="dplyr-contingency-table" class="level2">
 <h2 class="anchored" data-anchor-id="dplyr-contingency-table">dplyr contingency table</h2>
+<p>Dplyr group_by and summarize functions are used to create counts by weekly alcohol use and health status. This original structure included a row for each combination of the two categorical variables. Pivot wider creates new columns from repeating values from an existing column - Walc_f.x.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co">#observe count of health status across levels of reported weekly alcohol use</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="co">#reorient data using pivot_wider()</span></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(health_f.x, Walc_f.x) <span class="sc">|&gt;</span></span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> health_f.x, <span class="at">values_from =</span> count)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co">#observe count of health status across levels of reported weekly alcohol use</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="co">#reorient data using pivot_wider()</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(health_f.x, Walc_f.x) <span class="sc">|&gt;</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> health_f.x, <span class="at">values_from =</span> count)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`summarise()` has grouped output by 'health_f.x'. You can override using the
 `.groups` argument.</code></pre>
@@ -568,28 +572,29 @@ studytime_f.y
 <h1>Initial Bar Plots</h1>
 <section id="compare-stacked-with-side-by-side" class="level2">
 <h2 class="anchored" data-anchor-id="compare-stacked-with-side-by-side">Compare stacked with side by side</h2>
+<p>Two simple bar plots were created to demonstrate the different ways multiple categorical variables can be shown in a bar plot. One shows the total counts for the two groups stacked on top of each other. The other shows the two groups side-by-side, which can be easier to quickly read and interpret.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co">#stacked bar plot</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(combined, <span class="fu">aes</span>(<span class="at">x =</span> health_f.x, <span class="at">fill =</span> address)) <span class="sc">+</span></span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Stacked Bar Chart"</span>,<span class="at">x =</span> <span class="st">"Health"</span>, <span class="at">y =</span> <span class="st">"Observations"</span>) <span class="sc">+</span></span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co">#stacked bar plot</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(combined, <span class="fu">aes</span>(<span class="at">x =</span> health_f.x, <span class="at">fill =</span> address)) <span class="sc">+</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Stacked Bar Chart"</span>,<span class="at">x =</span> <span class="st">"Health"</span>, <span class="at">y =</span> <span class="st">"Observations"</span>) <span class="sc">+</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="homework5_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="homework5_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co">#side by side bar plot</span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(combined, <span class="fu">aes</span>(<span class="at">x =</span> health_f.x, <span class="at">fill =</span> address)) <span class="sc">+</span></span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Side by Side Bar Chart"</span>, <span class="at">x =</span> <span class="st">"Health"</span>, <span class="at">y =</span> <span class="st">"Observations"</span>) <span class="sc">+</span> </span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co">#side by side bar plot</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(combined, <span class="fu">aes</span>(<span class="at">x =</span> health_f.x, <span class="at">fill =</span> address)) <span class="sc">+</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Side by Side Bar Chart"</span>, <span class="at">x =</span> <span class="st">"Health"</span>, <span class="at">y =</span> <span class="st">"Observations"</span>) <span class="sc">+</span> </span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="homework5_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="homework5_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -598,17 +603,18 @@ studytime_f.y
 </section>
 <section id="numeric-variables" class="level1">
 <h1>Numeric Variables</h1>
+<p>5 measures of center and spread: mean, median, variance, standard deviation, and interquartile range were used to describe three numeric variables (student age, mathematics class absences, and the final G3 mathematics assessment score.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Measures of Center and Spread</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>fxlist <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">"mean"</span> <span class="ot">=</span> mean, <span class="st">"median"</span> <span class="ot">=</span> median, <span class="st">"var"</span> <span class="ot">=</span> var, <span class="st">"sd"</span> <span class="ot">=</span> sd, <span class="st">"IQR"</span> <span class="ot">=</span> IQR)</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>MeasureAndSpread1 <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(age,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>)),</span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(absences.x,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>)),</span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(G3.x,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>))</span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>MeasureAndSpread1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Measures of Center and Spread</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>fxlist <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">"mean"</span> <span class="ot">=</span> mean, <span class="st">"median"</span> <span class="ot">=</span> median, <span class="st">"var"</span> <span class="ot">=</span> var, <span class="st">"sd"</span> <span class="ot">=</span> sd, <span class="st">"IQR"</span> <span class="ot">=</span> IQR)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>MeasureAndSpread1 <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(age,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>)),</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(absences.x,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>)),</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(G3.x,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>))</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>MeasureAndSpread1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 # A tibble: 1 × 5
@@ -629,17 +635,18 @@ studytime_f.y
 1      11.0          11     18.5    4.30        5</code></pre>
 </div>
 </div>
+<p>The tables below take a similar approach to the first but have added a grouping variable, school. This helps one understand differences in students across the schools.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Overall age absences and G3 across school</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>MeasureAndSpread2 <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span> <span class="fu">group_by</span>(school)<span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(age,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>)),</span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span> <span class="fu">group_by</span>(school)<span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(absences.x,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>)),</span>
-<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span> <span class="fu">group_by</span>(school)<span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(G3.x,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>))</span>
-<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>MeasureAndSpread2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Overall age absences and G3 across school</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>MeasureAndSpread2 <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span> <span class="fu">group_by</span>(school)<span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(age,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>)),</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span> <span class="fu">group_by</span>(school)<span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(absences.x,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>)),</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span> <span class="fu">group_by</span>(school)<span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(G3.x,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>))</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>MeasureAndSpread2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 # A tibble: 2 × 6
@@ -664,16 +671,17 @@ studytime_f.y
 2 MS          9.88          10     19.7    4.44        4</code></pre>
 </div>
 </div>
+<p>Below the same information is repeated with a subset for the GP school.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co">#subset for GP school</span></span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>combinedgp <span class="ot">&lt;-</span> <span class="fu">filter</span>(combined,school <span class="sc">==</span> <span class="st">"GP"</span>)</span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>MeasureAndSpread3 <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>combinedgp <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(age,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>)),</span>
-<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>combinedgp <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(absences.x,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>)),</span>
-<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>combinedgp <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(G3.x,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>))</span>
-<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>MeasureAndSpread3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co">#subset for GP school</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>combinedgp <span class="ot">&lt;-</span> <span class="fu">filter</span>(combined,school <span class="sc">==</span> <span class="st">"GP"</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>MeasureAndSpread3 <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>combinedgp <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(age,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>)),</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>combinedgp <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(absences.x,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>)),</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>combinedgp <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(G3.x,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>))</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>MeasureAndSpread3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 # A tibble: 1 × 5
@@ -694,13 +702,14 @@ studytime_f.y
 1      11.2          11     18.3    4.27        5</code></pre>
 </div>
 </div>
+<p>Two categorical values: reason the student chose their school and the school they chose, are used to group descriptive statistics.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Measures across two variables: reason for choosing school and the school that was chosen. </span></span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>MeasureAndSpread4 <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span> <span class="fu">group_by</span>(reason, school)<span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(age,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>)),</span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span> <span class="fu">group_by</span>(reason, school)<span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(absences.x,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>)),</span>
-<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span> <span class="fu">group_by</span>(reason, school)<span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(G3.x,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>))</span>
-<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Measures across two variables: reason for choosing school and the school that was chosen. </span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>MeasureAndSpread4 <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span> <span class="fu">group_by</span>(reason, school)<span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(age,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>)),</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span> <span class="fu">group_by</span>(reason, school)<span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(absences.x,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>)),</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span> <span class="fu">group_by</span>(reason, school)<span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(G3.x,<span class="at">.fns =</span> fxlist,<span class="at">.names =</span> <span class="st">"{.col}_{.fn}"</span>))</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`summarise()` has grouped output by 'reason'. You can override using the
 `.groups` argument.
@@ -709,7 +718,7 @@ studytime_f.y
 `summarise()` has grouped output by 'reason'. You can override using the
 `.groups` argument.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>MeasureAndSpread4</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>MeasureAndSpread4</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 # A tibble: 8 × 7
@@ -760,10 +769,11 @@ studytime_f.y
 <h1>Correlation Matrix</h1>
 <section id="correlation-matrix-of-three-target-variables" class="level2">
 <h2 class="anchored" data-anchor-id="correlation-matrix-of-three-target-variables">correlation matrix of three target variables</h2>
+<p>The correlation matrix below shows how three numeric variables: age, mathematics absences, and final mathematics assessment are correlated with each other. There are no particularly strong linear associations between the three variables.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span></span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(age, absences.x, G3.x) <span class="sc">|&gt;</span></span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(age, absences.x, G3.x) <span class="sc">|&gt;</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                  age  absences.x        G3.x
 age         1.0000000  0.14392517 -0.20603186
@@ -774,10 +784,11 @@ G3.x       -0.2060319 -0.02811847  1.00000000</code></pre>
 </section>
 <section id="correlation-matrix-for-all-numeric-variables-in-combined-dataset" class="level2">
 <h2 class="anchored" data-anchor-id="correlation-matrix-for-all-numeric-variables-in-combined-dataset">correlation matrix for all numeric variables in combined dataset</h2>
+<p>For reference, a correlation matrix can easily be computed for all numeric variables in the dataset by taking advantage of the where(is.numeric) function. To properly interpret these some of these correlations prior knowledge is needed as some are discrete numerical values and others may be coded numeric values that represent categorical or ordinal data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span></span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">|&gt;</span></span>
-<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>combined <span class="sc">|&gt;</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">|&gt;</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                    age         Medu         Fedu   traveltime    studytime
 age         1.000000000 -0.100949786 -0.107245313  0.160281754  0.043881028
@@ -870,20 +881,37 @@ G3.y        0.475956497 -0.071452010  0.82541432  0.89430982  1.000000000</code>
 <section id="hist.-density-boxplot" class="level1">
 <h1>Hist., Density, Boxplot</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># using technique of naming ggplot object and calling in later steps</span></span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="co">#g &lt;- ggplot(combined, aes(x = absences.x, fill = sex))</span></span>
-<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="co">#g + geom_histogram( bins = 10, position = "dodge") + </span></span>
-<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>   <span class="co"># geom_density(alpha = .4) + </span></span>
-<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a><span class="co">#    labs(x = "Math Absences")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># using technique of naming ggplot object and calling in later steps</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="co">#g &lt;- ggplot(combined, aes(x = absences.x, fill = sex))</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="co">#g + geom_histogram( bins = 10, position = "dodge") + </span></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>   <span class="co"># geom_density(alpha = .4) + </span></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a><span class="co">#    labs(x = "Math Absences")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="scatterplot-analyses" class="level1">
 <h1>Scatterplot Analyses</h1>
 <section id="scatterplot-1-math-g3-scores-by-math-absences-by-school" class="level2">
 <h2 class="anchored" data-anchor-id="scatterplot-1-math-g3-scores-by-math-absences-by-school">Scatterplot 1 Math G3 Scores by Math Absences by school</h2>
+<p>In the scatterplot below, each dot represents a student’s unique combination of school they attend, mathematics absences and math G3 score. What school they attended is noted by their dot color.</p>
+<p>Most students had below 20 absences, and those with more tended to score worse on the assessment. Students in the MS school had fewer absences as a group than those in the GP school and they account for none of the outliers.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>gs <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(combined, <span class="fu">aes</span>(<span class="at">x =</span> absences.x, <span class="at">y =</span> G3.x, <span class="at">color =</span> school))</span>
-<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>gs <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Math Absences"</span>, <span class="at">y =</span> <span class="st">"Math G3 Score"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>gs <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(combined, <span class="fu">aes</span>(<span class="at">x =</span> absences.x, <span class="at">y =</span> G3.x, <span class="at">color =</span> school))</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>gs <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Math Absences"</span>, <span class="at">y =</span> <span class="st">"Math G3 Score"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="homework5_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="scatterplot-2-math-g3-scores-by-math-g1-scores-by-sex" class="level2">
+<h2 class="anchored" data-anchor-id="scatterplot-2-math-g3-scores-by-math-g1-scores-by-sex">Scatterplot 2 Math G3 Scores by Math G1 Scores by Sex</h2>
+<p>This scatterplot shows a strong linear relationship between the mathematics G1 score and the mathematics G3 score. Dot color denotes sex. The relationship appears consistent across sex.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>gs2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(combined, <span class="fu">aes</span>(<span class="at">x =</span> G1.x, <span class="at">y =</span> G3.x, <span class="at">color =</span> sex))</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>gs2 <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Math G1 Score"</span>, <span class="at">y =</span> <span class="st">"Math G3 Score"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -893,11 +921,11 @@ G3.y        0.475956497 -0.071452010  0.82541432  0.89430982  1.000000000</code>
 </div>
 </div>
 </section>
-<section id="scatterplot-2-math-g3-scores-by-math-g1-scores-by-sex" class="level2">
-<h2 class="anchored" data-anchor-id="scatterplot-2-math-g3-scores-by-math-g1-scores-by-sex">Scatterplot 2 Math G3 Scores by Math G1 Scores by Sex</h2>
+<section id="scatterplot-2-math-g3-scores-by-math-g1-scores-by-sex-1" class="level2">
+<h2 class="anchored" data-anchor-id="scatterplot-2-math-g3-scores-by-math-g1-scores-by-sex-1">Scatterplot 2 Math G3 Scores by Math G1 Scores by Sex</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>gs2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(combined, <span class="fu">aes</span>(<span class="at">x =</span> G1.x, <span class="at">y =</span> G3.x, <span class="at">color =</span> sex))</span>
-<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>gs2 <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Math G1 Score"</span>, <span class="at">y =</span> <span class="st">"Math G3 Score"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>gs2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(combined, <span class="fu">aes</span>(<span class="at">x =</span> G1.x, <span class="at">y =</span> G3.x, <span class="at">color =</span> sex))</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>gs2 <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Math G1 Score"</span>, <span class="at">y =</span> <span class="st">"Math G3 Score"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -907,11 +935,12 @@ G3.y        0.475956497 -0.071452010  0.82541432  0.89430982  1.000000000</code>
 </div>
 </div>
 </section>
-<section id="scatterplot-2-math-g3-scores-by-math-g1-scores-by-sex-1" class="level2">
-<h2 class="anchored" data-anchor-id="scatterplot-2-math-g3-scores-by-math-g1-scores-by-sex-1">Scatterplot 2 Math G3 Scores by Math G1 Scores by Sex</h2>
+<section id="scatterplot-with-facet" class="level2">
+<h2 class="anchored" data-anchor-id="scatterplot-with-facet">Scatterplot with facet</h2>
+<p>This plot shows a different presentation of the above information. Instead of each dot being a distinct color - males and females have their own scatterplot side by side. The male scores appear slightly more widely dispersed than the female scores.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>gs2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(combined, <span class="fu">aes</span>(<span class="at">x =</span> G1.x, <span class="at">y =</span> G3.x, <span class="at">color =</span> sex))</span>
-<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>gs2 <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Math G1 Score"</span>, <span class="at">y =</span> <span class="st">"Math G3 Score"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>gs2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(combined, <span class="fu">aes</span>(<span class="at">x =</span> G1.x, <span class="at">y =</span> G3.x))</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>gs2 <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Math G1 Score"</span>, <span class="at">y =</span> <span class="st">"Math G3 Score"</span>) <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span>sex) <span class="sc">+</span> <span class="fu">theme_light</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -921,30 +950,17 @@ G3.y        0.475956497 -0.071452010  0.82541432  0.89430982  1.000000000</code>
 </div>
 </div>
 </section>
-<section id="scatterplot-with-facet" class="level2">
-<h2 class="anchored" data-anchor-id="scatterplot-with-facet">Scatterplot with facet</h2>
+<section id="scatterplot-with-multi-categorical-facet" class="level2">
+<h2 class="anchored" data-anchor-id="scatterplot-with-multi-categorical-facet">Scatterplot with multi categorical facet</h2>
+<p>More than one categorical value can be used to research the G1 to G3 relationship. The 2x2 plot below shows this relationship by sex and by school. The same positive linear relationship is seen across all quadrants though the GP school has many more data points.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>gs2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(combined, <span class="fu">aes</span>(<span class="at">x =</span> G1.x, <span class="at">y =</span> G3.x))</span>
-<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>gs2 <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Math G1 Score"</span>, <span class="at">y =</span> <span class="st">"Math G3 Score"</span>) <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span>sex) <span class="sc">+</span> <span class="fu">theme_light</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>gs3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(combined, <span class="fu">aes</span>(<span class="at">x =</span> G1.x, <span class="at">y =</span> G3.x))</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>gs3 <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Math G1 Score"</span>, <span class="at">y =</span> <span class="st">"Math G3 Score"</span>) <span class="sc">+</span> </span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">facet_grid</span>(<span class="at">rows =</span> <span class="fu">vars</span>(school), <span class="at">cols =</span> <span class="fu">vars</span>(sex))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="homework5_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="scatterplot-with-multi-categorical-facet" class="level2">
-<h2 class="anchored" data-anchor-id="scatterplot-with-multi-categorical-facet">Scatterplot with multi categorical facet</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>gs3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(combined, <span class="fu">aes</span>(<span class="at">x =</span> G1.x, <span class="at">y =</span> G3.x))</span>
-<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>gs3 <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Math G1 Score"</span>, <span class="at">y =</span> <span class="st">"Math G3 Score"</span>) <span class="sc">+</span> </span>
-<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">facet_grid</span>(<span class="at">rows =</span> <span class="fu">vars</span>(school), <span class="at">cols =</span> <span class="fu">vars</span>(sex))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="homework5_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

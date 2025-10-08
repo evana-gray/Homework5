@@ -1,13 +1,9 @@
-"0","#Measures across two variables: reason for choosing school and the school that was chosen. "
-"0","MeasureAndSpread4 <- list("
-"0","combined |> group_by(reason, school)|> summarize(across(age,.fns = fxlist,.names = ""{.col}_{.fn}"")),"
-"0","combined |> group_by(reason, school)|> summarize(across(absences.x,.fns = fxlist,.names = ""{.col}_{.fn}"")),"
-"0","combined |> group_by(reason, school)|> summarize(across(G3.x,.fns = fxlist,.names = ""{.col}_{.fn}""))"
+"0","#subset for GP school"
+"0","combinedgp <- filter(combined,school == ""GP"")"
+"0","MeasureAndSpread3 <- list("
+"0","combinedgp |> summarize(across(age,.fns = fxlist,.names = ""{.col}_{.fn}"")),"
+"0","combinedgp |> summarize(across(absences.x,.fns = fxlist,.names = ""{.col}_{.fn}"")),"
+"0","combinedgp |> summarize(across(G3.x,.fns = fxlist,.names = ""{.col}_{.fn}""))"
 "0",")"
-"2","[38;5;255m`summarise()` has grouped output by 'reason'. You can override using the `.groups` argument.[39m
-"
-"2","[38;5;255m`summarise()` has grouped output by 'reason'. You can override using the `.groups` argument.[39m
-"
-"2","[38;5;255m`summarise()` has grouped output by 'reason'. You can override using the `.groups` argument.[39m
-"
-"0","MeasureAndSpread4"
+"0",""
+"0","MeasureAndSpread3"

@@ -1,6 +1,9 @@
-"0","# using technique of naming ggplot object and calling in later steps"
-"0","#g <- ggplot(combined, aes(x = absences.x, fill = sex))"
-"0","#g + geom_histogram( bins = 10, position = ""dodge"") + "
-"0","   # geom_density(alpha = .4) + "
-"0","#    labs(x = ""Math Absences"")"
 "0",""
+"0","combined |>"
+"0","  select(age, absences.x, G3.x) |>"
+"0","  cor()"
+"1","                  age  absences.x        G3.x
+age         1.0000000  0.14392517 -0.20603186
+absences.x  0.1439252  1.00000000 -0.02811847
+G3.x       -0.2060319 -0.02811847  1.00000000
+"

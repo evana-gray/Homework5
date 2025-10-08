@@ -1,9 +1,15 @@
-"0",""
-"0","combined |>"
-"0","  select(age, absences.x, G3.x) |>"
-"0","  cor()"
-"1","                  age  absences.x        G3.x
-age         1.0000000  0.14392517 -0.20603186
-absences.x  0.1439252  1.00000000 -0.02811847
-G3.x       -0.2060319 -0.02811847  1.00000000
+"0","#Measures across two variables: reason for choosing school and the school that was chosen. "
+"0","MeasureAndSpread4 <- list("
+"0","combined |> group_by(reason, school)|> summarize(across(age,.fns = fxlist,.names = ""{.col}_{.fn}"")),"
+"0","combined |> group_by(reason, school)|> summarize(across(absences.x,.fns = fxlist,.names = ""{.col}_{.fn}"")),"
+"0","combined |> group_by(reason, school)|> summarize(across(G3.x,.fns = fxlist,.names = ""{.col}_{.fn}""))"
+"0",")"
+"2","[38;5;255m`summarise()` has grouped output by 'reason'. You can override using the `.groups` argument.[39m
+"
+"2","[38;5;255m`summarise()` has grouped output by 'reason'. You can override using the `.groups` argument.[39m
+"
+"2","[38;5;255m`summarise()` has grouped output by 'reason'. You can override using the `.groups` argument.[39m
+"
+"0","MeasureAndSpread4"
+"1","[[1]]
 "
